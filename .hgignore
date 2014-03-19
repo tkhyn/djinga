@@ -1,0 +1,29 @@
+syntax: glob
+
+# buildout files and folders
+bin
+buildout/parts
+buildout/dev-eggs
+buildout/local.cfg
+.installed.cfg
+
+# distutils generated files and folders
+dist
+MANIFEST
+
+# eclipse project related files and folders
+.pydevproject
+.project
+.settings
+
+# python binary files
+*.pyc
+
+# locale binary files
+*.mo
+
+# log files
+*.log
+
+# Windows thumbnails
+**/thumbs.db
