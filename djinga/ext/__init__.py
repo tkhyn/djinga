@@ -1,6 +1,6 @@
-from statics import (
+from files import (
     StaticExtension as static,
     StaticCSSExtension as css,
-    StaticJSExtension as js
+    StaticJSExtension as js,
+    MediaExtension as media
 )
-

@@ -83,6 +83,9 @@ djinga.ext.js
 	javascript file. The js directory's relative path can be set through the
 	setting JINJA2_STATIC_JS
 
+djinga.ext.media
+	Simply concatenates django's MEDIA_URL to the argument provided
+
 
 Other Jinja2 extensions
 -----------------------

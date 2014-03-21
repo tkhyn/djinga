@@ -1,7 +1,12 @@
+"""
+Extensions to serve static and media files
+"""
+
 from jinja2 import nodes
 from jinja2.ext import Extension
 
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.conf import settings as dj_settings
 
 
 class SimpleTag(Extension):
@@ -14,7 +19,7 @@ class SimpleTag(Extension):
         parser.stream.next()
         args = []
         while parser.stream.current.type != 'block_end':
-            args.append(parser.parse_primary())
+            args.append(parser.parse_expression())
         return nodes.Output([self.call_method('tag_func', args)])
 
 
@@ -42,3 +47,10 @@ class StaticJSExtension(SimpleTag):
         return '<script type="text/javascript" src="%s"></script>' % \
             staticfiles_storage.url('%s/%s.js' % \
                                     (self.environment.js_dir, path))
+
+
+class MediaExtension(SimpleTag):
+    tags = set(['media'])
+
+    def tag_func(self, path):
+        return dj_settings.MEDIA_URL + path

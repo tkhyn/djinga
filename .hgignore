@@ -10,6 +10,7 @@ buildout/local.cfg
 # distutils generated files and folders
 dist
 MANIFEST
+djinga.egg-info
 
 # eclipse project related files and folders
 .pydevproject
