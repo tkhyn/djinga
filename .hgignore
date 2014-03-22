@@ -1,12 +1,5 @@
 syntax: glob
 
-# buildout files and folders
-bin
-buildout/parts
-buildout/dev-eggs
-buildout/local.cfg
-.installed.cfg
-
 # distutils generated files and folders
 dist
 MANIFEST
@@ -28,3 +21,10 @@ djinga.egg-info
 
 # Windows thumbnails
 **/thumbs.db
+
+syntax: regexp
+
+# buildout files and folders
+^buildout/(?!parts\.cfg$).*$
+^\.installed.cfg$
+
