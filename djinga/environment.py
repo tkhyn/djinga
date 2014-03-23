@@ -49,7 +49,8 @@ class DjingaTemplate(jinja2.Template):
     """
 
     def render(self, context=None):
-        if context == None: context = {}
+        if context == None:
+            context = {}
 
         new_ctxt = ctxt_to_dict(context)
 
@@ -63,9 +64,9 @@ class DjingaTemplate(jinja2.Template):
 
         return super(DjingaTemplate, self).render(new_ctxt)
 
-
     def stream(self, context=None):
-        if context == None: context = {}
+        if context == None:
+            context = {}
 
         new_ctxt = ctxt_to_dict(context)
 
@@ -119,5 +120,5 @@ class Environment(jinja2.Environment):
 
 
 env = Environment(**dict(OPTIONS, **{
-    'extensions':EXTENSIONS,
+    'extensions': EXTENSIONS,
 }))

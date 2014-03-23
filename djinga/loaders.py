@@ -28,8 +28,8 @@ class DjingaLoaderBase(object):
                 raise TemplateDoesNotExist(template_name)
             return template, template.filename
 
-        return super(DjingaLoaderBase, self).load_template(template_name, template_dirs)
-
+        return super(DjingaLoaderBase, self). \
+            load_template(template_name, template_dirs)
 
 
 class FileSystemLoader(DjingaLoaderBase, filesystem.Loader):
