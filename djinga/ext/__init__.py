@@ -4,3 +4,5 @@ from files import (
     StaticJSExtension as js,
     MediaExtension as media
 )
+
+from djangotags import DjangoTag as django
