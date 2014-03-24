@@ -33,7 +33,7 @@ from django.core.management.commands import makemessages
 from django.utils.translation import trans_real
 from django.template import BLOCK_TAG_START, BLOCK_TAG_END
 
-from ...environment import TEMPLATE_EXTS
+from djinga import env
 
 strip_whitespace_right = re.compile(
     r"(%s-?\s*(trans|pluralize).*?-%s)\s+" % \
@@ -54,7 +54,7 @@ class Command(makemessages.Command):
     def handle_noargs(self, **options):
 
         if not options['extensions']:
-            options['extensions'] = list(TEMPLATE_EXTS)
+            options['extensions'] = list(env.template_exts)
 
         old_endblock_re = trans_real.endblock_re
         old_block_re = trans_real.block_re

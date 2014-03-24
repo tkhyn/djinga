@@ -12,23 +12,8 @@ from django.conf import settings
 from django.template.context import BaseContext
 from django.template import Origin
 
-# Jinja2 settings loader and defaults
-
-JJ_EXTS = getattr(settings, 'JINJA2_JJ_EXTS', ('jjhtml', 'jjhtm'))
-DJ_EXTS = getattr(settings, 'JINJA2_DJ_EXTS', ('html', 'htm',
-                                               'djhtml', 'djhtm'))
-TEMPLATE_EXTS = JJ_EXTS + DJ_EXTS
-CONDITION = getattr(settings, 'JINJA2_CONDITION',
-    lambda path: os.path.basename(path).split('.')[-1] in JJ_EXTS)
-
-CSS_DIR = getattr(settings, 'JINJA2_STATIC_CSS', 'css')
-JS_DIR = getattr(settings, 'JINJA2_STATIC_JS', 'js')
-
-OPTIONS = getattr(settings, 'JINJA2_ENV_ARGS', {})
-GLOBALS = getattr(settings, 'JINJA2_GLOBALS', {})
-FILTERS = getattr(settings, 'JINJA2_FILTERS', {})
-EXTENSIONS = getattr(settings, 'JINJA2_EXTENSIONS', {})
-# optional parameter JINJA2_I18N_NEWSTYLE can be provided (boolean)
+DEFAULT_JJ_EXTS = ('jjhtml', 'jjhtm')
+DEFAULT_DJ_EXTS = ('html', 'htm', 'djhtml', 'djhtm')
 
 
 def ctxt_to_dict(ctxt):
@@ -81,12 +66,46 @@ class DjingaTemplate(jinja2.Template):
         return super(DjingaTemplate, self).stream(new_ctxt)
 
 
-class Environment(jinja2.Environment):
+builtin_attrs = object.__dict__.keys() + ['instance']
+
+
+class EnvMetaClass(type):
     """
-    Jinja2 environment subclass
+    Jinja2 environment metaclass (will be a singleton)
     """
 
+    instance = None
+
+    def __call__(self, *args, **kw):
+        if self.instance is None:
+            self.instance = type.__call__(self, *args, **kw)
+        return self.instance
+
+    def __getattribute__(self, attr):
+        if attr in builtin_attrs:
+            return type.__getattribute__(self, attr)
+        instance = self.instance
+        if not instance:
+            instance = type.__call__(self)
+            type.__setattr__(self, 'instance', instance)
+        return self.__getattribute__(instance, attr)
+
+
+class Environment(jinja2.Environment):
+    """
+    Jinja2 environment singleton subclass
+    """
+
+    __metaclass__ = EnvMetaClass
+
     def __init__(self, *args, **kwargs):
+        # environment initialisation
+        # this will be called on first request of an environment attribute
+        # (see metaclass implementation above)
+
+        kwargs.update(getattr(settings, 'JINJA2_ENV_ARGS', {}))
+        kwargs['extensions'] = getattr(settings, 'JINJA2_EXTENSIONS', {})
+
         super(Environment, self).__init__(*args, **kwargs)
 
         # install i18n if USE_I18N is true
@@ -106,19 +125,18 @@ class Environment(jinja2.Environment):
         self.template_class = DjingaTemplate
 
         # add filters
-        for k, f in FILTERS.iteritems():
-            self.filters[k] = f
+        self.filters.update(getattr(settings, 'JINJA2_FILTERS', {}))
 
         # add globals
-        for k, g in GLOBALS.iteritems():
-            self.globals[k] = g
+        self.globals.update(getattr(settings, 'JINJA2_GLOBALS', {}))
 
-        # add djinga specific options
-        self.use_jinja = CONDITION
-        self.css_dir = CSS_DIR
-        self.js_dir = JS_DIR
+        # add djinga specific attributes
+        jj_exts = getattr(settings, 'JINJA2_JJ_EXTS', DEFAULT_JJ_EXTS)
+        dj_exts = getattr(settings, 'JINJA2_DJ_EXTS', DEFAULT_DJ_EXTS)
+        self.template_exts = jj_exts + dj_exts
 
+        self.use_jinja = getattr(settings, 'JINJA2_CONDITION',
+            lambda path: os.path.basename(path).split('.')[-1] in jj_exts)
 
-env = Environment(**dict(OPTIONS, **{
-    'extensions': EXTENSIONS,
-}))
+        self.css_dir = getattr(settings, 'JINJA2_STATIC_CSS', 'css')
+        self.js_dir = getattr(settings, 'JINJA2_STATIC_JS', 'js')

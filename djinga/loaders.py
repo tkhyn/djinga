@@ -10,6 +10,8 @@ from django.template.loaders import app_directories
 from django.template.loaders import filesystem
 from django.template.base import TemplateDoesNotExist
 
+from environment import Environment as env
+
 
 class DjingaLoaderBase(object):
     """
@@ -18,8 +20,6 @@ class DjingaLoaderBase(object):
     """
 
     def load_template(self, template_name, template_dirs=None):
-
-        from environment import env  # to avoid circular dependencies
 
         if env.use_jinja(template_name) == True:
             try:

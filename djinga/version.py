@@ -4,7 +4,7 @@ Project versionning info
 
 import subprocess
 
-__version_info__ = (1, 0, 0, 'rc', 3)
+__version_info__ = (1, 0, 0, 'rc', 4)
 
 
 def get_version(version=__version_info__):
