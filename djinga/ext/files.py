@@ -28,6 +28,11 @@ class StaticExtension(SimpleTag):
 class StaticCSSExtension(StaticExtension):
     tags = set(['css'])
 
+    def __init__(self, environment):
+        super(StaticCSSExtension, self).__init__(environment)
+        self.environment.css_dir = \
+            getattr(dj_settings, 'JINJA2_STATIC_CSS', 'css')
+
     def tag_func(self, path):
 
         return '<link rel="stylesheet" type="text/css" href="%s">' % \
@@ -36,6 +41,11 @@ class StaticCSSExtension(StaticExtension):
 
 class StaticJSExtension(StaticExtension):
     tags = set(['js'])
+
+    def __init__(self, environment):
+        super(StaticJSExtension, self).__init__(environment)
+        self.environment.js_dir = \
+            getattr(dj_settings, 'JINJA2_STATIC_JS', 'js')
 
     def tag_func(self, path):
         return '<script type="text/javascript" src="%s"></script>' % \

@@ -138,5 +138,3 @@ class Environment(jinja2.Environment):
         self.use_jinja = getattr(settings, 'JINJA2_CONDITION',
             lambda path: os.path.basename(path).split('.')[-1] in jj_exts)
 
-        self.css_dir = getattr(settings, 'JINJA2_STATIC_CSS', 'css')
-        self.js_dir = getattr(settings, 'JINJA2_STATIC_JS', 'js')
