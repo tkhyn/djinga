@@ -2,55 +2,52 @@
 Extensions to serve static and media files
 """
 
-from jinja2 import nodes
-from jinja2.ext import Extension
+from _base import SimpleTag
 
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.conf import settings as dj_settings
-
-
-class SimpleTag(Extension):
-    """
-    Base class for a simple tag returning a constant string
-    """
-    abstract = True
-
-    def parse(self, parser):
-        parser.stream.next()
-        args = []
-        while parser.stream.current.type != 'block_end':
-            args.append(parser.parse_expression())
-        return nodes.Output([self.call_method('tag_func', args)])
 
 
 class StaticExtension(SimpleTag):
     """Django-like static tag"""
     tags = set(['static'])
 
+    def get_url(self, path, prefix=None):
+        is_absolute = path.startswith('/') or ':' in path.split('/')[0]
+        if not is_absolute:
+            if prefix:
+                path = '%s/%s' % (prefix, path)
+            return staticfiles_storage.url(path)
+        else:
+            return path
+
     def tag_func(self, path):
-        return staticfiles_storage.url(path)
+        return self.get_url(path)
 
 
-class StaticCSSExtension(SimpleTag):
+class StaticCSSExtension(StaticExtension):
     tags = set(['css'])
 
     def tag_func(self, path):
+
         return '<link rel="stylesheet" type="text/css" href="%s">' % \
-            staticfiles_storage.url('%s/%s.css' % \
-                                    (self.environment.css_dir, path))
+            self.get_url(path, self.environment.css_dir)
 
 
-class StaticJSExtension(SimpleTag):
+class StaticJSExtension(StaticExtension):
     tags = set(['js'])
 
     def tag_func(self, path):
         return '<script type="text/javascript" src="%s"></script>' % \
-            staticfiles_storage.url('%s/%s.js' % \
-                                    (self.environment.js_dir, path))
+            self.get_url(path, self.environment.js_dir)
 
 
 class MediaExtension(SimpleTag):
     tags = set(['media'])
 
     def tag_func(self, path):
-        return dj_settings.MEDIA_URL + path
+        is_absolute = path.startswith('/') or ':' in path.split('/')[0]
+        if not is_absolute:
+            return dj_settings.MEDIA_URL + path
+        else:
+            return path

@@ -6,3 +6,4 @@ from files import (
 )
 
 from djangotags import DjangoTag as django
+from urls import URLExtension as url
