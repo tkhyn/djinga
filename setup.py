@@ -5,18 +5,8 @@ Unobtrusive jinja2 integration in Django
 MIT license (see LICENSE.txt) unless otherwise stated in file header
 """
 
-from distutils.core import setup
+from setuptools import setup, find_packages
 import os
-
-INC_PACKAGES = 'djinga',  # string or tuple of strings
-EXC_PACKAGES = ()  # tuple of strings
-
-install_requires = (
-  'django>=1.6',
-  'jinja2'
-)
-setup_requires = (
-)
 
 
 # imports __version__ variable
@@ -33,10 +23,11 @@ DEV_STATUS = {'pre': '2 - Pre-Alpha',
               'final': '5 - Production/Stable'}
 
 # setup function parameters
-metadata = dict(
+setup(
     name='djinga',
     version=__version__,
     description='Unobtrusive jinja2 integration in Django',
+    long_description=open(os.path.join('README.rst')).read(),
     author='Thomas Khyn',
     author_email='thomas@ksytek.com',
     url='http://bitbucket.org/tkhyn/djinga',
@@ -52,39 +43,15 @@ metadata = dict(
         'Environment :: Other Environments',
         'Topic :: Software Development',
         'Topic :: Text Editors :: Text Processing',
-    ]
+    ],
+    packages=find_packages(exclude=('tests',)),
+    include_package_data=True,
+    package_data={
+        '': ['LICENSE.txt', 'README.rst']
+    },
+    install_requires=(
+      'django>=1.6',
+      'jinja2'
+    ),
+    zip_safe=True,
 )
-
-
-# packages parsing from root packages, without importing sub-packages
-root_path = os.path.dirname(__file__)
-if isinstance(INC_PACKAGES, basestring):
-    INC_PACKAGES = (INC_PACKAGES,)
-
-packages = []
-excludes = list(EXC_PACKAGES)
-for pkg in INC_PACKAGES:
-    pkg_root = os.path.join(root_path, *pkg.split('.'))
-    for dirpath, dirs, files in os.walk(pkg_root):
-        rel_path = os.path.relpath(dirpath, pkg_root)
-        pkg_name = pkg
-        if (rel_path != '.'):
-            pkg_name += '.' + rel_path.replace(os.sep, '.')
-        for x in excludes:
-            if x in pkg_name:
-                continue
-        if '__init__.py' in files:
-            packages.append(pkg_name)
-        elif dirs:  # stops package parsing if no __init__.py file
-            excludes.append(pkg_name)
-
-
-def read(filename):
-    return open(os.path.join(root_path, filename)).read()
-
-setup(**dict(metadata,
-   packages=packages,
-   long_description=read('README.txt'),  # use reST in README.txt !
-   install_requires=install_requires,
-   setup_requires=setup_requires
-))
