@@ -20,7 +20,7 @@ class HTMLCompressTests(TestCase):
                 }
               </script>
               <body>
-                <li><a href="{{ href }}">{{ title }}</a><br>Test   Foo
+                <li><a href="{{ href }}">{{ title }}</a><br>Test  Foo
                 <li><a href="{{ href }}">{{ title }}</a><img src=test.png>
               </body>
             </html>
@@ -31,7 +31,7 @@ class HTMLCompressTests(TestCase):
                 if (foo < 42) {
                   document.write('Foo < Bar');
                 }
-              </script><body><li><a href="index.html">42</a><br>Test Foo<li><a href="index.html">42</a><img src=test.png></body></html>''')
+              </script><body><li><a href="index.html">42</a><br>Test  Foo<li><a href="index.html">42</a><img src=test.png></body></html>''')
 
     def test_selective_compress(self):
         env = Environment(extensions=[SelectiveHTMLCompress])
@@ -51,7 +51,20 @@ class HTMLCompressTests(TestCase):
 
         expected = u'''
             Normal   <span>  unchanged </span> stuff
-            Stripped<span class=foo>test</span><a href="foo">test</a>42Normal<stuff>again42</stuff><p>Foo<br>Bar Baz<p>Moep<span>Test</span>Moep</p>
+            Stripped <span class=foo  >   test   </span><a href="foo">  test </a> 42Normal <stuff>   again 42  </stuff><p>Foo<br>Bar Baz<p>Moep    <span>Test</span>    Moep</p>
         '''
 
+        self.maxDiff = None
         self.assertEqual(tmpl.render(foo=42), expected)
+
+    def test_leave_spaces_between_vars(self):
+        env = Environment(extensions=[HTMLCompress])
+        tmpl = env.from_string('''
+        {%if True %}
+            {{ two }} {{ variables }} in the middle
+            of the text
+        {% endif %}
+        ''')
+
+        self.assertEqual(tmpl.render(two='Two', variables='variables'),
+                         'Two variables in the middle of the text')

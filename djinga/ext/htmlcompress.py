@@ -9,6 +9,15 @@
     :copyright: (c) 2011 by Armin Ronacher.
     :license: BSD.
 """
+
+# Apr. 2014: fixed an issue with spaces stripping, by Thomas Khyn
+# Before, all spaces neighbouring a tag or a Jinja variable were stripped,
+# forcing the use of {{' '}} or &#x20; in some situations. These spaces are no
+# longer stripped.
+# However, spaces in the middle of lines are no longer stripped either. We make
+# the assumption that the developer is careful enough not to involuntary leave
+# multiple spaces in the middle of his HTML code
+
 import re
 from jinja2.ext import Extension
 from jinja2.lexer import Token, describe_token
@@ -16,7 +25,7 @@ from jinja2 import TemplateSyntaxError
 
 
 _tag_re = re.compile(r'(?:<(/?)([a-zA-Z0-9_-]+)\s*|(>\s*))(?s)')
-_ws_normalize_re = re.compile(r'[ \t\r\n]+')
+_ws_normalize_re = re.compile(r'\s*[\r\n]\s*')
 
 
 class StreamProcessContext(object):
@@ -92,7 +101,12 @@ class HTMLCompress(Extension):
         buffer = []
         def write_data(value):
             if not self.is_isolated(ctx.stack):
-                value = _ws_normalize_re.sub(' ', value.strip())
+                l = _ws_normalize_re.split(value)
+                if not l[0]:
+                    l.pop(0)
+                if l and not l[-1]:
+                    l.pop()
+                value = ' '.join(l)
             buffer.append(value)
 
         for match in _tag_re.finditer(ctx.token.value):
