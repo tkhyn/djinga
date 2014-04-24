@@ -1,4 +1,5 @@
 DEBUG = True
+SECRET_KEY = 'secret'
 
 DATABASES = {
     'default': {

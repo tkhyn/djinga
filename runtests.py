@@ -1,10 +1,20 @@
-from tests import settings as SETTINGS
-from django.conf import settings
+import os
+import sys
 
-settings.configure(**{k: getattr(SETTINGS, k) for k in dir(SETTINGS) \
-                          if k[0].isupper()})
+os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
 
-from django.test.simple import DjangoTestSuiteRunner
+from django.core.management import execute_from_command_line
 
-test_runner = DjangoTestSuiteRunner(verbosity=1)
-test_runner.run_tests(['tests', ])
+
+if __name__ == '__main__':
+
+    default_labels = ['tests']
+
+    argv = ['manage.py', 'test'] + sys.argv[1:]
+    for a in sys.argv:
+        if [x for x in default_labels if a.startswith(x)]:
+            break
+    else:
+        argv += default_labels
+
+    sys.exit(execute_from_command_line(argv))
