@@ -5,6 +5,8 @@ Jinja2 environment container and functions, settings defaults and loader
 """
 
 import os
+from importlib import import_module
+
 import jinja2
 
 from django.template import loader
@@ -124,11 +126,20 @@ class Environment(jinja2.Environment):
         # template class
         self.template_class = DjingaTemplate
 
-        # add filters
+        # add globally defined filters and globals from the settings
         self.filters.update(getattr(settings, 'JINJA2_FILTERS', {}))
-
-        # add globals
         self.globals.update(getattr(settings, 'JINJA2_GLOBALS', {}))
+
+        # add filters and globals from custom modules
+        load_from = getattr(settings, 'JINJA2_LOAD_FROM', ())
+        for module_path in load_from:
+            mod = import_module(module_path)
+            for x in dir(mod):
+                o = getattr(mod, x)
+                if hasattr(o, '_jj_filter'):
+                    self.filters[o._jj_name] = o
+                elif hasattr(o, '_jj_global'):
+                    self.globals[o._jj_name] = o
 
         # add djinga specific attributes
         jj_exts = getattr(settings, 'JINJA2_JJ_EXTS', DEFAULT_JJ_EXTS)
@@ -137,4 +148,3 @@ class Environment(jinja2.Environment):
 
         self.use_jinja = getattr(settings, 'JINJA2_CONDITION',
             lambda path: os.path.basename(path).split('.')[-1] in jj_exts)
-
