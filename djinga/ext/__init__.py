@@ -5,5 +5,8 @@ from files import (
     MediaExtension as media
 )
 
-from djangotags import DjangoTag as django
+from djangotags import (
+    DjangoTag as django,
+    CsrfToken as csrf_token
+)
 from urls import URLExtension as url
