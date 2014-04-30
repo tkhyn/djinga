@@ -3,6 +3,7 @@ Extensions to use Django template language within Jinja2 templates
 """
 
 from django import template as dj_template
+from django.core.exceptions import ImproperlyConfigured
 
 from jinja2 import nodes, contextfunction
 from jinja2.ext import Extension
@@ -32,5 +33,11 @@ class DjangoTag(Extension):
 
     @contextfunction
     def _django(self, context, html):
-        context = dj_template.RequestContext(context['request'], context)
+        request = context.get('request', None)
+        if not request:
+            raise ImproperlyConfigured(
+                'You need to enable the django.core.context_processors.request '
+                'context processor to use the {% django %} tag in Jinja2 '
+                'templates.')
+        context = dj_template.RequestContext(request, context)
         return dj_template.Template(html).render(context)

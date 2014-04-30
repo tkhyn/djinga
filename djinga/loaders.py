@@ -21,7 +21,7 @@ class DjingaLoaderBase(object):
 
     def load_template(self, template_name, template_dirs=None):
 
-        if env.use_jinja(template_name) == True:
+        if env.use_jinja(template_name):
             try:
                 template = env.get_template(template_name)
             except TemplateNotFound:

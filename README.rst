@@ -94,7 +94,9 @@ djinga.ext.media
 
 djinga.ext.django
    Provides a ``{% django %}{% enddjango %}`` tag to include django template
-   language in a jinja2 template.
+   language in a jinja2 template. For this tag to work, the
+   ``django.core.context_processors.request`` context processor must be
+   enabled.
 
 djinga.ext.url
    Provides a tag for URL reversing, similar to the django templates one.
