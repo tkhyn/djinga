@@ -5,6 +5,7 @@ buildout
 .installed.cfg
 
 # distutils generated files and folders
+build
 dist
 MANIFEST
 djinga.egg-info
