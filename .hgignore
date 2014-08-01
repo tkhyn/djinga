@@ -10,10 +10,8 @@ dist
 MANIFEST
 djinga.egg-info
 
-# eclipse project related files and folders
-.pydevproject
-.project
-.settings
+# tox environments
+.tox
 
 # python binary files
 *.pyc
