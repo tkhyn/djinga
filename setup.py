@@ -36,6 +36,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.3',
         'License :: OSI Approved :: MIT License',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
@@ -53,7 +54,8 @@ setup(
     },
     install_requires=(
       'django>=1.6',
-      'jinja2'
+      'jinja2',
+      'six'
     ),
     zip_safe=True,
 )

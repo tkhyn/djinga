@@ -68,7 +68,7 @@ class DjingaTemplate(jinja2.Template):
         return super(DjingaTemplate, self).stream(new_ctxt)
 
 
-builtin_attrs = object.__dict__.keys() + ['instance']
+builtin_attrs = list(object.__dict__.keys()) + ['instance']
 
 
 class EnvMetaClass(type):

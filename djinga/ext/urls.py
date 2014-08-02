@@ -2,7 +2,7 @@
 Extensions for URL reversing
 """
 
-from _base import SimpleTag
+from ._base import SimpleTag
 
 from django.core.urlresolvers import reverse
 

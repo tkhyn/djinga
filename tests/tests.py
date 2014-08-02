@@ -21,11 +21,9 @@ def load_all(loader, mod_name, init_file_path):
 
     cur_dir = os.path.dirname(os.path.abspath(init_file_path))
     for m in os.listdir(cur_dir):
-        if os.path.isdir(os.path.join(cur_dir, m)):
-            pass
-        elif m.endswith('.py') and m != '__init__.py':
+        if m.endswith('.py') and m != '__init__.py':
             m = m[:-3]
-        else:
+        elif not os.path.isdir(os.path.join(cur_dir, m)) or m == '__pycache__':
             continue
         mod = import_module('.'.join((mod_name, m)))
         suite.addTests(loader.loadTestsFromModule(mod))

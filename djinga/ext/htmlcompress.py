@@ -18,7 +18,12 @@
 # the assumption that the developer is careful enough not to involuntary leave
 # multiple spaces in the middle of his HTML code
 
+# Aug. 2014: Python 3.3 compatibility, by Thomas Khyn
+
 import re
+from six import next
+from six.moves import xrange
+
 from jinja2.ext import Extension
 from jinja2.lexer import Token, describe_token
 from jinja2 import TemplateSyntaxError
@@ -161,4 +166,4 @@ class SelectiveHTMLCompress(HTMLCompress):
                 yield Token(stream.current.lineno, 'data', value)
             else:
                 yield stream.current
-            stream.next()
+            next(stream)

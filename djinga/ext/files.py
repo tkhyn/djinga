@@ -2,7 +2,7 @@
 Extensions to serve static and media files
 """
 
-from _base import SimpleTag
+from ._base import SimpleTag
 
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.conf import settings as dj_settings
