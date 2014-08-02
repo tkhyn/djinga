@@ -53,7 +53,7 @@ setup(
         '': ['LICENSE.txt', 'README.rst']
     },
     install_requires=(
-      'django>=1.6',
+      'django>=1.4',
       'jinja2',
       'six'
     ),
