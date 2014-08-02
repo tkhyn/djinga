@@ -15,6 +15,8 @@ INSTALLED_APPS = ('django.contrib.auth',
                 'djinga',
                 'tests',)
 
+MIDDLEWARE_CLASSES = ()
+
 TEMPLATE_LOADERS = (
     'djinga.loaders.FileSystemLoader',
     'djinga.loaders.AppLoader',
