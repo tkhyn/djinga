@@ -68,7 +68,9 @@ class DjingaTemplate(jinja2.Template):
         return super(DjingaTemplate, self).stream(new_ctxt)
 
 
-builtin_attrs = list(object.__dict__.keys()) + ['instance']
+builtin_attrs = list(object.__dict__.keys()) + \
+                list(type.__dict__.keys()) + \
+                ['instance']
 
 
 class EnvMetaClass(type):
@@ -106,7 +108,8 @@ class Environment(jinja2.Environment):
         # (see metaclass implementation above)
 
         kwargs.update(getattr(settings, 'JINJA2_ENV_ARGS', {}))
-        kwargs['extensions'] = getattr(settings, 'JINJA2_EXTENSIONS', {})
+        kwargs['extensions'] = set(kwargs.get('extensions', [])) \
+            .union(getattr(settings, 'JINJA2_EXTENSIONS', {}))
 
         super(Environment, self).__init__(*args, **kwargs)
 
