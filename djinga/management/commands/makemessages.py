@@ -1,5 +1,7 @@
 """
-Adapted from django-jinja / coffin
+Adapted from coffin, https://github.com/coffin/coffin
+(c) Coffin contributors
+3-clause BSD License
 
 Jinja2's i18n functionality is not exactly the same as Django's.
 In particular, the tags names and their syntax are different:

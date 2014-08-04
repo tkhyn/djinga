@@ -54,7 +54,9 @@ class CsrfToken(Extension):
     This tag is a bit stricter than the Django tag in that it doesn't
     simply ignore any invalid arguments passed in.
 
-    [copied from coffin]
+    Copied from Coffin, https://github.com/coffin/coffin
+    (c) Coffin contributors
+    3-clause BSD License
     """
 
     tags = set(['csrf_token'])
