@@ -1,6 +1,8 @@
 DEBUG = True
 SECRET_KEY = 'secret'
 
+ROOT_URLCONF = 'tests.urls'
+
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
