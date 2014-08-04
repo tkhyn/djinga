@@ -53,7 +53,7 @@ bin/python
    versions that are specified in the buildout configuration and that are
    used for the tests.
 
-bin/test
+bin/tests
    This script runs the test suite. See below, `Running the tests`_.
 
 bin/coverage
@@ -70,9 +70,9 @@ bin/coverage
 Running the tests
 -----------------
 
-Simply generate the ``bin/test`` script and, from the root directory, type::
+Simply generate the ``bin/tests`` script and, from the root directory, type::
 
-   $ bin/test
+   $ bin/tests
 
 For coverage information, you can add ``--with-coverage`` to the above test
 command but it's more convenient to use the shortcut::
@@ -104,7 +104,7 @@ focuses on running commands in various environments (the ones the users of the
 software will run it in). It basically creates virtual environments and runs
 the test suite (possibly with adaptations) in each of these environments.
 
-Running the tox suite is just a matter of installing tox and runnint it from
+Running the tox suite is just a matter of installing tox and running it from
 the main directory::
 
    $ pip install tox
