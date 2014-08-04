@@ -1,0 +1,7 @@
+{% trans %}Between trans/endtrans{% endtrans %}
+{% trans n=number -%}
+One translated string
+{%- pluralize -%}
+{{ n }} translated strings
+{%- endtrans %}
+{{ _('Between braces and parenthesis') }}
