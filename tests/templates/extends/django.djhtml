@@ -1,0 +1,4 @@
+{% extends 'extends/jinja.jjhtml' %}
+{% block content %}
+This is a minimal django template that extends a jinja template.
+{% endblock %}

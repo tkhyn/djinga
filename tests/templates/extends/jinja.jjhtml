@@ -1,0 +1,1 @@
+{% block content %}This is a jinja2 template which content is defined in template that extend it.{% endblock %}

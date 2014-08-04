@@ -1,4 +1,6 @@
 from django.utils import unittest
+from django.template.loader import get_template
+from django.template import Context
 
 from djinga import environment
 
@@ -25,12 +27,17 @@ class TestCase(unittest.TestCase):
 
     extensions = ()
     template = ''
+    template_file = ''
 
     def setUp(self):
         self.env = TestEnvironment(extensions=self.extensions)
 
     def render(self, **context):
-        tmpl = self.env.from_string(self.template)
+        if self.template_file:
+            tmpl = get_template(self.template_file)
+            context = Context(context)
+        else:
+            tmpl = self.env.from_string(self.template)
         return tmpl.render(context)
 
     def assertRender(self, expected, context={}, msg=None):

@@ -1,3 +1,5 @@
+import os
+
 DEBUG = True
 SECRET_KEY = 'secret'
 
@@ -28,5 +30,7 @@ TEMPLATE_LOADERS = (
     'djinga.loaders.FileSystemLoader',
     'djinga.loaders.AppLoader',
 )
+
+TEMPLATE_DIRS = os.path.join(os.path.dirname('__file__'), 'templates')
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
