@@ -1,10 +1,11 @@
-
-# nose should not look for tests in this module
-__test__ = False
-
 from django.utils import unittest
 
 from djinga import environment
+
+
+# nose should not look for tests in this module
+__test__ = False
+__unittest = True
 
 
 class TestEnvMetaClass(environment.EnvMetaClass):
@@ -31,3 +32,7 @@ class TestCase(unittest.TestCase):
     def render(self, **context):
         tmpl = self.env.from_string(self.template)
         return tmpl.render(context)
+
+    def assertRender(self, expected, context={}, msg=None):
+        actual = self.render(**context)
+        self.assertEqual(actual, expected, msg)

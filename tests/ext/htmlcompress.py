@@ -23,12 +23,13 @@ class HTMLCompressTests(TestCase):
             </html>
         '''
 
-        self.assertEqual(self.render(title=42, href='index.html'),
-           '''<html><head><title>42</title></head><script type=text/javascript>
+        expected = \
+            '''<html><head><title>42</title></head><script type=text/javascript>
                 if (foo < 42) {
                   document.write('Foo < Bar');
                 }
-              </script><body><li><a href="index.html">42</a><br>Test  Foo<li><a href="index.html">42</a><img src=test.png></body></html>''')
+              </script><body><li><a href="index.html">42</a><br>Test  Foo<li><a href="index.html">42</a><img src=test.png></body></html>'''
+        self.assertRender(expected, dict(title=42, href='index.html'))
 
     def test_leave_spaces_between_vars(self):
         self.template = '''
@@ -37,9 +38,8 @@ class HTMLCompressTests(TestCase):
             of the text
         {% endif %}
         '''
-
-        self.assertEqual(self.render(two='Two', variables='variables'),
-                         'Two variables in the middle of the text')
+        expected = 'Two variables in the middle of the text'
+        self.assertRender(expected, dict(two='Two', variables='variables'))
 
 
 class SelectiveHTMLCompressTests(TestCase):
@@ -67,4 +67,4 @@ class SelectiveHTMLCompressTests(TestCase):
         '''
 
         self.maxDiff = None
-        self.assertEqual(self.render(foo=42), expected)
+        self.assertRender(expected, dict(foo=42))
