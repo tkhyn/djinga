@@ -24,6 +24,12 @@ class DjangoTagsTests(TestCase):
         self.assertRender('To be translated',
                           {'request': request_factory.get('/')})
 
+    def test_django_tag_file(self):
+        # using django specific template tags, without spaces nor linebreaks
+        self.template_file = 'djangotag/jinja.jjhtml'
+        self.assertRender('\n\nTo be translated\n',
+                          {'request': request_factory.get('/')})
+
     def test_csrf_token(self):
         self.template = '{% csrf_token %}'
         csrf_token = 'CSRFTOKEN'

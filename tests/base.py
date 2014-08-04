@@ -3,6 +3,7 @@ from django.template.loader import get_template
 from django.template import Context
 
 from djinga import environment
+from djinga import loaders
 
 
 # nose should not look for tests in this module
@@ -15,6 +16,7 @@ class TestEnvMetaClass(environment.EnvMetaClass):
 
     def __call__(self, *args, **kw):
         self.instance = type.__call__(self, *args, **kw)
+        loaders.env = self.instance
         return self.instance
 
 

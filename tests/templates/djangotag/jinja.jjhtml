@@ -1,0 +1,4 @@
+{% django %}
+{% load i18n %}
+{% blocktrans %}To be translated{% endblocktrans %}
+{% enddjango %}
