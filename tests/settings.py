@@ -1,6 +1,10 @@
 DEBUG = True
 SECRET_KEY = 'secret'
 
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+
 DATABASES = {
     'default': {
         'NAME': 'djinga',
