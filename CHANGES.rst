@@ -2,6 +2,13 @@ Changes
 =======
 
 
+1.1.1 (2014-08-06)
+------------------
+
+- Compatibility with Django 1.4 to 1.7
+- Compatibility with Python 2.6 to 3.4 (depending on django version)
+
+
 1.1 (2014-07-20)
 ----------------
 
