@@ -56,8 +56,9 @@ JINJA2_CONDITION
    function returning True if the extension is in JINJA2_JJ_EXTS
 
 JINJA2_EXTENSIONS
-   The extensions to be loaded by jinja2. Some extensions are shipped with
-   djinga under ``djinga.ext.*``
+   A tuple or list of extensions to be loaded by jinja2 (as python objects or
+   paths to the python objects). `Some extensions`_ are shipped with
+   djinga under ``djinga.ext.*``.
 
 JINJA2_ENV_ARGS
    The jinja2 environment's constructor keyword arguments as a dictionary.
@@ -69,13 +70,10 @@ JINJA2_FILTERS
    The jinja2 filters as a dictionary.
 
 
-Extensions and template tags
-----------------------------
+Jinja2 extensions
+-----------------
 
-Built-in Jinja2 extensions
-..........................
-
-Djinga comes with several Jinja2 extensions
+Djinga comes with several Jinja2 extensions:
 
 djinga.ext.static
    Provides a ``{% static 'path' %}`` tag to refer to Django's staticfiles
@@ -101,19 +99,19 @@ djinga.ext.django
    ``django.core.context_processors.request`` context processor must be
    enabled.
 
+djinga.ext.csrf_token
+   Provides a Django-like ``{% csrf_token %}`` tag.
+
 djinga.ext.url
    Provides a tag for URL reversing, similar to the django templates one.
 
-Other Jinja2 extensions
-.......................
-
 djinga.ext.htmlcompress.HTMLCompress / SelectiveHTMLCompress
-   |copyright| 2011 Armin Ronacher.
+   Based on `Armin Ronacher's version`_.
    Eliminates useless whitespace at template compilation time without extra
    overhead.
 
 Django template tags
-....................
+--------------------
 
 The following tags are available in any django template explicitly loading
 ``djinga_tags`` using the ``{% load djinga_tags %}`` statement.
@@ -138,3 +136,5 @@ translation in Jinja2 templates appear in the translations dictionary.
 
 .. _django-jinja: https://github.com/niwibe/django-jinja
 .. _django-jinja2: https://github.com/yuchant/django-jinja2
+.. _`Some extensions`: `Jinja2 extensions`_
+.. _`Armin Ronacher's version`: https://github.com/mitsuhiko/jinja2-htmlcompress/blob/master/jinja2htmlcompress.py
