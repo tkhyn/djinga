@@ -10,3 +10,5 @@ from .djangotags import (
     CsrfToken as csrf_token
 )
 from .urls import URLExtension as url
+
+from . import htmlcompress
