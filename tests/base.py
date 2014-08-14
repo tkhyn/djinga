@@ -1,4 +1,4 @@
-from django.utils import unittest
+from django.utils import unittest, six
 from django.template.loader import get_template
 from django.template import Context
 
@@ -20,9 +20,9 @@ class TestEnvMetaClass(environment.EnvMetaClass):
         return self.instance
 
 
-class TestEnvironment(environment.Environment):
+class TestEnvironment(six.with_metaclass(TestEnvMetaClass,
+                                         environment.Environment)):
     __test__ = False
-    __metaclass__ = TestEnvMetaClass
 
 
 class TestCase(unittest.TestCase):

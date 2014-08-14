@@ -4,6 +4,7 @@ Extensions to use Django template language within Jinja2 templates
 
 from django import template as dj_template
 from django.core.exceptions import ImproperlyConfigured
+from django.utils import six
 
 from jinja2 import nodes, contextfunction
 from jinja2.ext import Extension
@@ -11,7 +12,7 @@ from jinja2 import Markup
 
 
 class DjangoTag(Extension):
-    # from https://github.com/coffin/coffin/pull/12/files?short_path=88b99bb&unchanged=collapsed
+    # from https://github.com/coffin/coffin/pull/12/files?short_path=88b99bb#diff-e511b022f54e135b99f896c8fb355067R131
 
     tags = set(['django'])
 
@@ -22,12 +23,12 @@ class DjangoTag(Extension):
         return source
 
     def parse(self, parser):
-        lineno = parser.stream.next().lineno
-        while not parser.stream.next().test('block_end'):
+        lineno = six.next(parser.stream).lineno
+        while not six.next(parser.stream).test('block_end'):
             pass
-        body = nodes.Const(parser.stream.next().value)
+        body = nodes.Const(six.next(parser.stream).value)
         while not parser.stream.current.test('block_end'):
-            parser.stream.next()
+            six.next(parser.stream)
         return nodes.Output([
             self.call_method('_django', args=[body], kwargs=[]),
         ]).set_lineno(lineno=lineno)
@@ -62,7 +63,7 @@ class CsrfToken(Extension):
     tags = set(['csrf_token'])
 
     def parse(self, parser):
-        lineno = parser.stream.next().lineno
+        lineno = six.next(parser.stream).lineno
         return nodes.Output([
             self.call_method('_render', [nodes.Name('csrf_token', 'load')]),
         ]).set_lineno(lineno)

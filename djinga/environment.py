@@ -14,6 +14,7 @@ from django.conf import settings
 from django.template.context import BaseContext
 from django.template import Origin
 from django.core.exceptions import ImproperlyConfigured
+from django.utils import six
 
 DEFAULT_EXTS = {'J': ('jjhtml', 'jjhtm'),  # jinja2
                 'D': ('html', 'htm', 'djhtml', 'djhtm')}  # django
@@ -96,12 +97,10 @@ class EnvMetaClass(type):
         return self.__getattribute__(instance, attr)
 
 
-class Environment(jinja2.Environment):
+class Environment(six.with_metaclass(EnvMetaClass, jinja2.Environment)):
     """
     Jinja2 environment singleton subclass
     """
-
-    __metaclass__ = EnvMetaClass
 
     def __init__(self, *args, **kwargs):
         # environment initialisation
