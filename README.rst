@@ -40,13 +40,14 @@ Settings
 --------
 
 JINJA2_DJ_EXTS
-   The file extensions for templates that should be rendered with Django's
-   internal template engine.
+   A list or tuple of file extensions (with or without the leading dot) for
+   templates that should be rendered with Django's internal template engine.
 
    Defaults to ``('html', 'htm', 'jjhtml', 'jjhtm')``
 
 JINJA2_JJ_EXTS
-   The file extensions for templates that should be rendered with Jinja2.
+   A list or tuple of the file extensions (with or without the leading dot) for
+   templates that should be rendered with Jinja2.
 
    Defaults to ``('jjhtml', 'jjhtm')``
 

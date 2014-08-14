@@ -13,9 +13,10 @@ from django.template import loader
 from django.conf import settings
 from django.template.context import BaseContext
 from django.template import Origin
+from django.core.exceptions import ImproperlyConfigured
 
-DEFAULT_JJ_EXTS = ('jjhtml', 'jjhtm')
-DEFAULT_DJ_EXTS = ('html', 'htm', 'djhtml', 'djhtm')
+DEFAULT_EXTS = {'J': ('jjhtml', 'jjhtm'),  # jinja2
+                'D': ('html', 'htm', 'djhtml', 'djhtm')}  # django
 
 
 def ctxt_to_dict(ctxt):
@@ -144,10 +145,20 @@ class Environment(jinja2.Environment):
                 elif hasattr(o, '_jj_global'):
                     self.globals[o._jj_name] = o
 
-        # add djinga specific attributes
-        jj_exts = getattr(settings, 'JINJA2_JJ_EXTS', DEFAULT_JJ_EXTS)
-        dj_exts = getattr(settings, 'JINJA2_DJ_EXTS', DEFAULT_DJ_EXTS)
-        self.template_exts = jj_exts + dj_exts
+        # fetch template extensions
+        self.template_exts = []
+        for s in 'DJ':  # 'J' must be in last position (see after the loop)
+            s_name = 'JINJA2_%sJ_EXTS' % s
+            exts = getattr(settings, s_name, DEFAULT_EXTS[s])
+
+            if isinstance(exts, tuple):
+                exts = list(exts)
+            elif not isinstance(exts, list):
+                raise ImproperlyConfigured(
+                    'JINJA_%sJ_EXTS should be a tuple or list' % s)
+            for i, ext in enumerate(exts):
+                exts[i] = ext.lstrip('.')
+            self.template_exts.extend(exts)
 
         self.use_jinja = getattr(settings, 'JINJA2_CONDITION',
-            lambda path: os.path.basename(path).split('.')[-1] in jj_exts)
+            lambda path: os.path.basename(path).split('.')[-1] in exts)
