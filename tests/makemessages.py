@@ -1,6 +1,7 @@
 import os
 import shutil
 
+import django
 from django.core.management import call_command
 
 from .base import TestCase
@@ -16,7 +17,10 @@ class MakemessagesTests(TestCase):
         shutil.rmtree(self.locale_dir)
 
     def test_make_messages(self):
-        call_command('makemessages', locale=('fr',))
+        loc = 'fr'
+        if django.VERSION >= (1, 6):
+            loc = [loc]
+        call_command('makemessages', locale=loc)
 
         po_file = open(os.path.join(self.locale_dir, 'fr',
                                     'LC_MESSAGES', 'django.po'), 'r')
