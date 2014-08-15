@@ -70,6 +70,10 @@ JINJA2_GLOBALS
 JINJA2_FILTERS
    The jinja2 filters as a dictionary.
 
+JINJA2_LOAD_FROM
+   A tuple or list of module paths to load globals and filters from. This
+   advantageously complements or replaces ``JINJA_GLOBALS`` and
+   ``JINJA2_FILTERS``. See `Adding globals and filters`_ for details.
 
 Jinja2 extensions
 -----------------
@@ -95,12 +99,14 @@ djinga.ext.media
    Simply concatenates django's MEDIA_URL to the argument provided
 
 djinga.ext.django
+   From `a PR on coffin`_.
    Provides a ``{% django %}{% enddjango %}`` tag to include django template
    language in a jinja2 template. For this tag to work, the
    ``django.core.context_processors.request`` context processor must be
    enabled.
 
 djinga.ext.csrf_token
+   From coffin_
    Provides a Django-like ``{% csrf_token %}`` tag.
 
 djinga.ext.url
@@ -125,10 +131,74 @@ extends
    extension (in JINJA2_DJ_EXTS or JINJA2_JJ_EXTS)
 
 
-Management command
-------------------
 
-Djinga overrides the Django core management command ``makemessages`` to include
+Adding globals and filters
+--------------------------
+
+A straightforward way to add globals and filters and make them available from
+your Jinja2 templates is to add them to the ``JINJA2_GLOBALS`` or the
+``JINJA2_FILTERS`` in the settings module.
+
+However, this is not always convenient nor possible (import loops), and djinga
+therefore provides a way to ease this process, through the ``jj_global`` and
+``jj_filter`` decorators in combination with the ``JINJA2_LOAD_FROM`` setting.
+
+Basically, the decorators mark the functions as Jinja2 globals or filters,
+while the setting (a list of module paths) indicates djinga where to look for
+them.
+
+A short example is better than long explanations, so here we go.
+
+This::
+
+   [my_app/my_module.py]
+   from djinga.register import jj_filter, jj_global
+
+   @jj_global
+   def my_tag(*args, **kw):
+      pass
+
+   @jj_filter
+   def my_filter(*args, **kw)
+      pass
+
+   [settings.py]
+   JINJA2_LOAD_FROM = (
+      'my_app.my_module',
+   )
+
+is equivalent to this::
+
+   [my_app/my_module.py]
+   def my_tag(*args):
+      pass
+
+   def my_filter(*args, **kw)
+      pass
+
+   [settings.py]
+   from my_module import my_tag, my_filter
+   JINJA2_GLOBALS = {'my_tag': my_tag}
+   JINJA2_FILTERS = {'my_filter': my_filter}
+
+...with the significant advantage of not requiring a possibly issue-prone
+``import`` statement in the ``settings`` module.
+
+The ``jj_global`` and ``jj_filter`` decorators are compatible with any of the
+`Jinja2 built-in decorators`_. They do not affect the behavior nor the
+signature of the decorated function, so you can use it normally (as a normal
+Django template tag or filter, for example).
+
+The collected globals and filters are appended to the ones already specified
+in ``JINJA2_GLOBALS`` and ``JINJA2_FILTERS``.
+
+
+``makemesssages`` management command
+------------------------------------
+
+Adapted from coffin_.
+
+Djinga overrides the Django ``makemessages`` core management command to include
 the specific Jinja2 translation tags and ensure the strings marked for
 translation in Jinja2 templates appear in the translations dictionary.
 
@@ -138,4 +208,7 @@ translation in Jinja2 templates appear in the translations dictionary.
 .. _django-jinja: https://github.com/niwibe/django-jinja
 .. _django-jinja2: https://github.com/yuchant/django-jinja2
 .. _`Some extensions`: `Jinja2 extensions`_
+.. _`a PR on coffin`: https://github.com/coffin/coffin/pull/12/files?short_path=88b99bb#diff-e511b022f54e135b99f896c8fb355067R131
+.. _coffin: https://github.com/coffin/coffin/pull/12/files?short_path=88b99bb
 .. _`Armin Ronacher's version`: https://github.com/mitsuhiko/jinja2-htmlcompress/blob/master/jinja2htmlcompress.py
+.. _`Jinja2 built-in decorators`: http://jinja.pocoo.org/docs/api/#utilities
