@@ -16,12 +16,5 @@ djinga.egg-info
 
 # python binary files
 *.pyc
+__pycache__
 
-# locale binary files
-*.mo
-
-# log files
-*.log
-
-# Windows thumbnails
-**/thumbs.db
