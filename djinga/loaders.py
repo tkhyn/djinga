@@ -10,7 +10,7 @@ from django.template.loaders import app_directories
 from django.template.loaders import filesystem
 from django.template.base import TemplateDoesNotExist
 
-from environment import Environment as env
+from .environment import Environment as env
 
 
 class DjingaLoaderBase(object):

@@ -16,11 +16,7 @@ DATABASES = {
     }
 }
 
-INSTALLED_APPS = ('django.contrib.auth',
-                  'django.contrib.contenttypes',
-                  'django.contrib.sessions',
-                  'django.contrib.admin',
-                  'djinga',
+INSTALLED_APPS = ('djinga',
                   'tests',
                   'django_nose')
 
@@ -31,6 +27,6 @@ TEMPLATE_LOADERS = (
     'djinga.loaders.AppLoader',
 )
 
-TEMPLATE_DIRS = os.path.join(os.path.dirname('__file__'), 'templates')
+TEMPLATE_DIRS = (os.path.join(os.path.dirname('__file__'), 'templates'),)
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

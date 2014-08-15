@@ -1,6 +1,23 @@
 Changes
 =======
 
+1.1.2 (2014-08-15)
+------------------
+
+Bugfixes:
+
+- extensions package import issues
+- JINJA2_[DJ]J_EXTS handling:
+   * an exception is raised if the value is not a list or tuple
+   * file extensions tolerate leading dot
+   * clarified documentation
+- issues with Python 3
+
+Documentation:
+
+- added previously missing doc relative to jj_global and jj_filter decorators
+  and JINJA2_FROM_MODULE setting value
+
 
 1.1.1 (2014-08-06)
 ------------------
