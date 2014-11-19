@@ -52,7 +52,6 @@ setup(
     install_requires=(
       'django>=1.4',
       'jinja2',
-      'six'
     ),
     zip_safe=True,
 )

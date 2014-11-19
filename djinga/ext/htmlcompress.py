@@ -21,8 +21,8 @@
 # Aug. 2014: Python 3.3 compatibility, by Thomas Khyn
 
 import re
-from six import next
-from six.moves import xrange
+from django.utils.six import next
+from django.utils.six.moves import xrange
 
 from jinja2.ext import Extension
 from jinja2.lexer import Token, describe_token
