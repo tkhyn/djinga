@@ -2,14 +2,6 @@ Changes
 =======
 
 
-1.2a (dev)
-----------
-
-- Compatibility with Django 1.8
-- Backwards incompatible: djinga.env is no longer exposed as the jinja2
-  environment
-
-
 1.1 (20-07-2014)
 ----------------
 
@@ -17,6 +9,13 @@ Changes
 - Added warning when request context processor is not enabled and
   ``{% django %}`` is used
 - Filters and globals can now be imported from any module
+
+1.1.3 (16-04-2015)
+..................
+
+- Compatibility with Django 1.8
+- Backwards incompatible: djinga.env is no longer exposed as the jinja2
+  environment
 
 1.1.2 (15-08-2014)
 ..................
