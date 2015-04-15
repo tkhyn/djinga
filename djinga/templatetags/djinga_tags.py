@@ -11,8 +11,9 @@ http://concentricsky.com/blog/2013/jan/extending-jinja2-django-templates
 import re
 
 from django import template
-from django.template import engines
 from django.template.loader_tags import do_extends
+
+from ..engines import engines
 
 register = template.Library()
 

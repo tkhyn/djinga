@@ -27,7 +27,7 @@ class DjingaTemplates(DjangoTemplates):
                               getargspec(env_cls.__init__)[0][1:]
 
         jjenv_options = {}
-        for k in options.keys():
+        for k in list(options.keys()):
             if k in jjenv_options_names:
                 jjenv_options[k] = options.pop(k)
 

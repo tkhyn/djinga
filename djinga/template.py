@@ -1,7 +1,7 @@
 import jinja2
 
 from django.template.context import BaseContext
-from django.template import engines
+from .engines import engines
 
 
 def ctxt_to_dict(ctxt):

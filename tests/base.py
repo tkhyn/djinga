@@ -1,6 +1,10 @@
 from django import test
 from django.template.loader import get_template
-from django.template import Context, engines
+from django.template import Context
+
+from djinga.engines import engines
+
+from .compat import set_environment, get_old_options
 
 
 # nose should not look for tests in this module
@@ -16,16 +20,11 @@ class TestCase(test.TestCase):
 
     def _pre_setup(self):
         super(TestCase, self)._pre_setup()
-        self.old_options = engines.templates['djinga']['OPTIONS'].copy()
+        self.old_options = get_old_options()
         self.setEnvironment(extensions=self.extensions)
 
     def setEnvironment(self, **kwargs):
-        try:
-            del engines._engines['djinga']
-        except KeyError:
-            pass
-        engines.templates['djinga']['OPTIONS'] = kwargs
-        engines['djinga']  # this reinitializes the djinga backend
+        set_environment(**kwargs)
 
     def _post_teardown(self):
         self.setEnvironment(**self.old_options)
