@@ -5,87 +5,65 @@ Jinja2 environment container and functions, settings defaults and loader
 """
 
 import os
+import sys
 from importlib import import_module
 
 import jinja2
 
-from django.template import loader
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.template.base import TemplateDoesNotExist, TemplateSyntaxError
 from django.utils import six
 
 from .template import DjingaTemplate
 
 
-DEFAULT_EXTS = {'J': ('jjhtml', 'jjhtm'),  # jinja2
-                'D': ('html', 'htm', 'djhtml', 'djhtm')}  # django
-
-
-builtin_attrs = list(object.__dict__.keys()) + \
-                list(type.__dict__.keys()) + \
-                ['instance']
-
-
-class EnvMetaClass(type):
-    """
-    Jinja2 environment metaclass (will be a singleton)
-    """
-
-    instance = None
-
-    def __call__(self, *args, **kw):
-        if self.instance is None:
-            self.instance = type.__call__(self, *args, **kw)
-        return self.instance
-
-    def __getattribute__(self, attr):
-        if attr in builtin_attrs:
-            return type.__getattribute__(self, attr)
-        instance = self.instance
-        if not instance:
-            instance = type.__call__(self)
-            type.__setattr__(self, 'instance', instance)
-        return self.__getattribute__(instance, attr)
-
-
-class Environment(six.with_metaclass(EnvMetaClass, jinja2.Environment)):
+class Environment(jinja2.Environment):
     """
     Jinja2 environment singleton subclass
     """
 
-    def __init__(self, *args, **kwargs):
-        # environment initialisation
-        # this will be called on first request of an environment attribute
-        # (see metaclass implementation above)
+    template_class = DjingaTemplate
 
-        kwargs.update(getattr(settings, 'JINJA2_ENV_ARGS', {}))
-        kwargs['extensions'] = set(kwargs.get('extensions', [])) \
-            .union(getattr(settings, 'JINJA2_EXTENSIONS', {}))
+    def __init__(self,
+                 filters=None,
+                 globals=None,
+                 load_from=(),
+                 dj_exts=('html', 'htm', 'djhtml', 'djhtm'),  # django
+                 jj_exts=('jjhtml', 'jjhtm'),  # jinja2
+                 condition=None,
+                 i18n_new_style=False,
+                 **options):
 
-        super(Environment, self).__init__(*args, **kwargs)
+        # fetch template extensions
+        self.template_exts = []
+        for s, exts in zip(('d', 'j'), [dj_exts, jj_exts]):
+            if isinstance(exts, tuple):
+                exts = list(exts)
+            elif not isinstance(exts, list):
+                raise ImproperlyConfigured(
+                    '"%sj_exts" should be a tuple or list' % s)
+            for i, ext in enumerate(exts):
+                exts[i] = ext.lstrip('.')
+            self.template_exts.extend(exts)
 
-        # install i18n if USE_I18N is true
+        self.use_jinja = condition or \
+            (lambda path: os.path.splitext(path)[-1].lstrip('.') in jj_exts)
+
+        super(Environment, self).__init__(**options)
+
+        # automatically install i18n extension if USE_I18N is true
         if settings.USE_I18N:
             self.add_extension('jinja2.ext.i18n')
             from django.utils import translation
             self.install_gettext_translations(translation,
-                newstyle=getattr(settings, 'JINJA2_I18N_NEWSTYLE', False))
-
-        # template loader
-        template_dirs = [x for ldr_str in settings.TEMPLATE_LOADERS\
-            for x in loader.find_template_loader(ldr_str)\
-            .get_template_sources('')]
-        self.loader = jinja2.FileSystemLoader(template_dirs)
-
-        # template class
-        self.template_class = DjingaTemplate
+                                              newstyle=i18n_new_style)
 
         # add globally defined filters and globals from the settings
-        self.filters.update(getattr(settings, 'JINJA2_FILTERS', {}))
-        self.globals.update(getattr(settings, 'JINJA2_GLOBALS', {}))
+        self.filters.update(filters or {})
+        self.globals.update(globals or {})
 
         # add filters and globals from custom modules
-        load_from = getattr(settings, 'JINJA2_LOAD_FROM', ())
         for module_path in load_from:
             mod = import_module(module_path)
             for x in dir(mod):
@@ -95,20 +73,13 @@ class Environment(six.with_metaclass(EnvMetaClass, jinja2.Environment)):
                 elif hasattr(o, '_jj_global'):
                     self.globals[o._jj_name] = o
 
-        # fetch template extensions
-        self.template_exts = []
-        for s in 'DJ':  # 'J' must be in last position (see after the loop)
-            s_name = 'JINJA2_%sJ_EXTS' % s
-            exts = getattr(settings, s_name, DEFAULT_EXTS[s])
-
-            if isinstance(exts, tuple):
-                exts = list(exts)
-            elif not isinstance(exts, list):
-                raise ImproperlyConfigured(
-                    'JINJA_%sJ_EXTS should be a tuple or list' % s)
-            for i, ext in enumerate(exts):
-                exts[i] = ext.lstrip('.')
-            self.template_exts.extend(exts)
-
-        self.use_jinja = getattr(settings, 'JINJA2_CONDITION',
-            lambda path: os.path.basename(path).split('.')[-1] in exts)
+    @jinja2.utils.internalcode
+    def get_template(self, *args, **kwargs):
+        try:
+            return super(Environment, self).get_template(*args, **kwargs)
+        except jinja2.TemplateNotFound as exc:
+            six.reraise(TemplateDoesNotExist,
+                        TemplateDoesNotExist(exc.args), sys.exc_info()[2])
+        except jinja2.TemplateSyntaxError as exc:
+            six.reraise(TemplateSyntaxError,
+                        TemplateSyntaxError(exc.args), sys.exc_info()[2])

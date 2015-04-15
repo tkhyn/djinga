@@ -33,9 +33,9 @@ getting-translation-strings-for-jinja2-templates-integrated-with-django-1-x
 import re
 from django.core.management.commands import makemessages
 from django.utils.translation import trans_real
-from django.template import BLOCK_TAG_START, BLOCK_TAG_END
+from django.template.base import BLOCK_TAG_START, BLOCK_TAG_END
+from django.template import engines
 
-from djinga import env
 
 strip_whitespace_right = re.compile(
     r"(%s-?\s*(trans|pluralize).*?-%s)\s+" % \
@@ -53,10 +53,10 @@ def strip_whitespaces(src):
 
 class Command(makemessages.Command):
 
-    def handle_noargs(self, **options):
+    def handle(self, *args, **options):
 
         if not options['extensions']:
-            options['extensions'] = list(env.template_exts)
+            options['extensions'] = list(engines['djinga'].env.template_exts)
 
         old_endblock_re = trans_real.endblock_re
         old_block_re = trans_real.block_re
@@ -80,8 +80,12 @@ class Command(makemessages.Command):
         trans_real.templatize = my_templatize
 
         try:
-            super(Command, self).handle_noargs(**options)
+            super(Command, self).handle(**options)
         finally:
             trans_real.endblock_re = old_endblock_re
             trans_real.block_re = old_block_re
             trans_real.templatize = old_templatize
+
+    def handle_noargs(self, **options):
+        # for django < 1.8
+        return self.handle(**options)

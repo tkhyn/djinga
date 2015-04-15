@@ -11,9 +11,8 @@ http://concentricsky.com/blog/2013/jan/extending-jinja2-django-templates
 import re
 
 from django import template
+from django.template import engines
 from django.template.loader_tags import do_extends
-
-import djinga
 
 register = template.Library()
 
@@ -30,11 +29,11 @@ def do_extends_jinja(parser, token):
     if len(bits) != 2:
         raise template.TemplateSyntaxError("'%s' takes one argument" % bits[0])
 
-    template = bits[1][1:-1]
-    if djinga.env.use_jinja(template):
+    tmpl = bits[1][1:-1]
+    if engines['djinga'].env.use_jinja(tmpl):
         # extends a Jinja2 template
         nodelist = parser.parse()
-        return JinjaNode(template, nodelist)
+        return JinjaNode(tmpl, nodelist)
     else:
         # extends a Django template, use Django's do_extend
         return do_extends(parser, token)
@@ -65,7 +64,7 @@ class JinjaNode(template.Node):
                                  (node_name, spr, rendered_node)
             else:
                 output_string += node.render(context)
-        output_template = djinga.env.from_string(output_string)
+        output_template = engines['djinga'].env.from_string(output_string)
         output_template.name = self.parent_template
         context_dict = {}
         for d in context.dicts:

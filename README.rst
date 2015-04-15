@@ -9,7 +9,7 @@ Freely inspired from django-jinja_ and django-jinja2_, as none of them met all
 my expectations!
 
 
-Compatible with django 1.4 to 1.7 and relevant python versions (2.7 to 3.4).
+Compatible with django 1.4 to 1.8 and relevant python versions (2.7 to 3.4).
 
 
 Usage
@@ -17,6 +17,27 @@ Usage
 
 - Install djinga using the method of your choice
 - Add 'djinga' to your INSTALLED_APPS
+
+On django 1.8+
+..............
+
+- Set the ``TEMPLATE`` setting as::
+
+   TEMPLATES = [
+      {
+         'BACKEND': 'djinga.backends.djinga.DjingaTemplates',
+         'DIRS': ['your/first/template/directory',
+                  'your/second/template/directory'],
+         'OPTIONS': {
+            see `settings`_
+         },
+      },
+   ]
+
+
+On django < 1.8
+...............
+
 - Change the TEMPLATE_LOADERS settings to::
 
    TEMPLATE_LOADERS = (

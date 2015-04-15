@@ -11,7 +11,10 @@ class MakemessagesTests(TestCase):
 
     def setUp(self):
         self.locale_dir = os.path.join(os.path.dirname(__file__), 'locale')
-        os.mkdir(self.locale_dir)
+        try:
+            os.mkdir(self.locale_dir)
+        except OSError:
+            pass
 
     def tearDown(self):
         shutil.rmtree(self.locale_dir)

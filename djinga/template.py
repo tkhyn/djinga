@@ -1,8 +1,7 @@
 import jinja2
 
-from django.conf import settings
 from django.template.context import BaseContext
-from django.template import Origin
+from django.template import engines
 
 
 def ctxt_to_dict(ctxt):
@@ -28,9 +27,10 @@ class DjingaTemplate(jinja2.Template):
 
         new_ctxt = ctxt_to_dict(context)
 
-        if settings.TEMPLATE_DEBUG:
+        if engines['djinga'].engine.debug:
             # send django signal on template rendering if in debug mode
             from django.test import signals
+            from django.template.base import Origin
             self.origin = Origin(self.filename)
             signals.template_rendered.send(sender=self,
                                            template=self,
@@ -44,9 +44,10 @@ class DjingaTemplate(jinja2.Template):
 
         new_ctxt = ctxt_to_dict(context)
 
-        if settings.TEMPLATE_DEBUG:
+        if engines['djinga'].engine.debug:
             # send django signal on template rendering if in debug mode
             from django.test import signals
+            from django.template.base import Origin
             self.origin = Origin(self.filename)
             signals.template_rendered.send(sender=self,
                                            template=self,
