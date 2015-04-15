@@ -1,7 +1,7 @@
 djinga
 ======
 
-|copyright| 2014 Thomas Khyn
+|copyright| 2014-2015 Thomas Khyn
 
 Unobtrusive jinja2 integration in Django
 
@@ -10,6 +10,24 @@ my expectations!
 
 
 Compatible with django 1.4 to 1.8 and relevant python versions (2.7 to 3.4).
+
+
+Why djinga ?
+------------
+
+As said above, because no other jinja2 integration app for django met my
+requirements.
+
+Djinga enables you to:
+
+- Use django and jinja2 templates in the same project
+- Call jinja2 templates from django ones and vice-versa
+- Turn any django templatetag or python function into jinja2 filters or
+  globals using decorators ... and without creating import loops
+- Extract translation strings from jinja2 templates with django's
+  ``makemessages`` management command
+- Access useful jinja2 extensions, such as HTML compression and most django
+  template's native tags
 
 
 Usage
@@ -29,10 +47,12 @@ On django 1.8+
          'DIRS': ['your/first/template/directory',
                   'your/second/template/directory'],
          'OPTIONS': {
-            see `settings`_
+             ...
          },
       },
    ]
+
+- Add the relevant `options`_ for jinja2 and djinga
 
 
 On django < 1.8
@@ -45,7 +65,7 @@ On django < 1.8
       'djinga.loaders.AppLoader',
    )
 
-- Add the relevant `settings`_ for jinja2
+- Add the relevant `options`_ for jinja2
 
 
 How it works
@@ -57,44 +77,77 @@ or .jjhtm file extension, it will be rendered by Jinja2, using the setting
 values provided in django's setting module.
 
 
-Settings
---------
+Options
+-------
 
-JINJA2_DJ_EXTS
+On django 1.8+
+..............
+
+Simply add the following options to the ``'OPTIONS'`` section of the
+``TEMPLATES`` item matching the djinga backend::
+
+   TEMPLATES = [
+      {
+         'BACKEND': 'djinga.backends.djinga.DjingaTemplates',
+         'OPTIONS': {
+            'option1': 'value1',
+            'option2': {'key1': 'val1',
+                        'key2': 'val2'},
+             ...
+          },
+      },
+   ]
+
+
+dj_exts
    A list or tuple of file extensions (with or without the leading dot) for
    templates that should be rendered with Django's internal template engine.
 
    Defaults to ``('html', 'htm', 'jjhtml', 'jjhtm')``
 
-JINJA2_JJ_EXTS
+jj_exts
    A list or tuple of the file extensions (with or without the leading dot) for
    templates that should be rendered with Jinja2.
 
    Defaults to ``('jjhtml', 'jjhtm')``
 
-JINJA2_CONDITION
+condition
    A function taking as sole argument the path of the template file and
    returning True if the file should be rendered with Jinja2. Defaults to a
    function returning True if the extension is in JINJA2_JJ_EXTS
 
-JINJA2_EXTENSIONS
+extensions
    A tuple or list of extensions to be loaded by jinja2 (as python objects or
    paths to the python objects). `Some extensions`_ are shipped with
    djinga under ``djinga.ext.*``.
 
-JINJA2_ENV_ARGS
-   The jinja2 environment's constructor keyword arguments as a dictionary.
-
-JINJA2_GLOBALS
+globals
    The jinja2 globals as a dictionary.
 
-JINJA2_FILTERS
+filters
    The jinja2 filters as a dictionary.
 
-JINJA2_LOAD_FROM
+load_from
    A tuple or list of module paths to load globals and filters from. This
-   advantageously complements or replaces ``JINJA_GLOBALS`` and
-   ``JINJA2_FILTERS``. See `Adding globals and filters`_ for details.
+   advantageously complements or replaces the ``globals`` and
+   ``filters`` options. See `Adding globals and filters`_ for details.
+
+any_jinja2_option
+   Any other argument to construct a jinja2 environment may be provided.
+
+On django < 1.8
+...............
+
+All the options above are turned into settings using the template::
+
+   JINJA2_<OPTION_NAME_IN_UPPERCASE>
+
+For example, the above ``dj_exts`` option can be specified using the setting
+``JINJA2_DJ_EXTS``
+
+For supplemetary keyword arguments for the jinja2 environment construction, a
+supplementary setting is available: ``JINJA2_ENV_ARGS``.
+
 
 Jinja2 extensions
 -----------------
@@ -149,7 +202,7 @@ extends
    jinja2 files as well as normal django template files. While the template
    engine for the current file remains Django's one, the template engine for
    the extended file can be either Jinja2 or Django, depending on the file
-   extension (in JINJA2_DJ_EXTS or JINJA2_JJ_EXTS)
+   extension (in ``dj_exts`` or ``jj_exts``)
 
 
 
@@ -157,12 +210,12 @@ Adding globals and filters
 --------------------------
 
 A straightforward way to add globals and filters and make them available from
-your Jinja2 templates is to add them to the ``JINJA2_GLOBALS`` or the
-``JINJA2_FILTERS`` in the settings module.
+your Jinja2 templates is to add them to the ``globals`` or the ``filters``
+options in the settings module.
 
 However, this is not always convenient nor possible (import loops), and djinga
 therefore provides a way to ease this process, through the ``jj_global`` and
-``jj_filter`` decorators in combination with the ``JINJA2_LOAD_FROM`` setting.
+``jj_filter`` decorators in combination with the ``load_from`` option.
 
 Basically, the decorators mark the functions as Jinja2 globals or filters,
 while the setting (a list of module paths) indicates djinga where to look for
@@ -183,7 +236,17 @@ This::
    def my_filter(*args, **kw)
       pass
 
-   [settings.py]
+   [settings.py] # django 1.8+
+   TEMPLATES = [
+      {
+         'BACKEND': 'djinga.backends.djinga.DjingaTemplates',
+         'OPTIONS': {
+            'load_from': ('my_app.my_module',),
+          },
+      },
+   ]
+
+   [settings.py] # django < 1.8
    JINJA2_LOAD_FROM = (
       'my_app.my_module',
    )
@@ -197,8 +260,20 @@ is equivalent to this::
    def my_filter(*args, **kw)
       pass
 
-   [settings.py]
-   from my_module import my_tag, my_filter
+   [settings.py] # django 1.8+
+   from my_app.my_module import my_tag, my_filter
+   TEMPLATES = [
+      {
+         'BACKEND': 'djinga.backends.djinga.DjingaTemplates',
+         'OPTIONS': {
+            'globals': {'my_tag': my_tag},
+            'filters': {'my_filter': my_filter},
+          },
+      },
+   ]
+
+   [settings.py] # django < 1.8
+   from my_app.my_module import my_tag, my_filter
    JINJA2_GLOBALS = {'my_tag': my_tag}
    JINJA2_FILTERS = {'my_filter': my_filter}
 
@@ -211,7 +286,7 @@ signature of the decorated function, so you can use it normally (as a normal
 Django template tag or filter, for example).
 
 The collected globals and filters are appended to the ones already specified
-in ``JINJA2_GLOBALS`` and ``JINJA2_FILTERS``.
+in ``globals`` and ``filters``.
 
 
 ``makemesssages`` management command
