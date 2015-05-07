@@ -27,16 +27,16 @@ except ImportError:
 
         settings_options = dict(
             loader=jinja2.FileSystemLoader(template_dirs),
-            extensions=getattr(settings, 'JINJA2_EXTENSIONS', {})
+            extensions=getattr(settings, 'JINJA2_EXTENSIONS', {}),
+            load_from=getattr(settings, 'JINJA2_LOAD_FROM', ()),
+            filters=getattr(settings, 'JINJA2_FILTERS', {}),
+            globals=getattr(settings, 'JINJA2_GLOBALS', {}),
+            **getattr(settings, 'JINJA2_ENV_ARGS', {})
         )
-        settings_options.update(getattr(settings, 'JINJA2_ENV_ARGS', {}))
+        settings_options.update(**options)
 
-        options = dict(settings_options, **options)
+        _env = Environment(**settings_options)
 
-        _env = Environment(**options)
-
-        _env.filters.update(getattr(settings, 'JINJA2_FILTERS', {}))
-        _env.globals.update(getattr(settings, 'JINJA2_GLOBALS', {}))
 
     class DummyEngine(object):
         def __init__(self):
