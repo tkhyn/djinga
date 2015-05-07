@@ -9,7 +9,8 @@ Freely inspired from django-jinja_ and django-jinja2_, as none of them met all
 my expectations!
 
 
-Compatible with django 1.4 to 1.8 and relevant python versions (2.7 to 3.4).
+Compatible with django 1.4 to 1.8 and relevant python versions (2.6 to 3.4).
+Django 1.5 and 1.6 are not officially supported anymore.
 
 
 Why djinga ?
