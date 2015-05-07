@@ -32,7 +32,6 @@ getting-translation-strings-for-jinja2-templates-integrated-with-django-1-x
 
 import re
 from django.core.management.commands import makemessages
-from django.core.management.base import NoArgsCommand
 from django.utils.translation import trans_real
 from django.template.base import BLOCK_TAG_START, BLOCK_TAG_END
 
@@ -82,9 +81,10 @@ class Command(makemessages.Command):
         trans_real.templatize = my_templatize
 
         try:
-            if isinstance(self, NoArgsCommand):
+            try:
+                # django < 1.8
                 super(Command, self).handle_noargs(**options)
-            else:
+            except AttributeError:
                 super(Command, self).handle(**options)
         finally:
             trans_real.endblock_re = old_endblock_re
