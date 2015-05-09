@@ -25,11 +25,13 @@ INSTALLED_APPS = ('djinga',
 
 MIDDLEWARE_CLASSES = ()
 
+_template_dirs = (os.path.join(os.path.dirname('__file__'), 'templates'),)
+
 if django.VERSION >= (1, 8):
     TEMPLATES = [
         dict(
             BACKEND='djinga.backends.djinga.DjingaTemplates',
-            DIRS=(os.path.join(os.path.dirname('__file__'), 'templates'),),
+            DIRS=_template_dirs,
         ),
     ]
 else:
@@ -37,6 +39,6 @@ else:
         'djinga.loaders.FileSystemLoader',
         'djinga.loaders.AppLoader',
     )
-    TEMPLATE_DIRS = (os.path.join(os.path.dirname('__file__'), 'templates'),)
+    TEMPLATE_DIRS = _template_dirs
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
