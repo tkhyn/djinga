@@ -21,7 +21,7 @@ class DjingaTemplate(jinja2.Template):
     Adapter class for jinja2 templates
     """
 
-    def render(self, context=None):
+    def render(self, context=None, request=None):
         if context == None:
             context = {}
 
