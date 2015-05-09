@@ -5,30 +5,29 @@ djinga
 
 Unobtrusive jinja2 integration in Django
 
-Freely inspired from django-jinja_ and django-jinja2_, as none of them met all
-my expectations!
-
-
 Compatible with django 1.4 to 1.8 and relevant python versions (2.6 to 3.4).
-Django 1.5 and 1.6 are not officially supported anymore.
+Django 1.5 and 1.6 are not officially supported anymore, but it probably
+still works with these versions.
 
 
 Why djinga ?
 ------------
 
-As said above, because no other jinja2 integration app for django met my
-requirements.
+Simply because no other jinja2 integration app for django met the requirements
+of a perfectionist django developer.
 
 Djinga enables you to:
 
-- Use django and jinja2 templates in the same project
-- Call jinja2 templates from django ones and vice-versa
+- Use django and jinja2 templates in the same project with dynamic selection
+  of the template engine to use
+- Extend and include jinja2 templates from django ones and vice-versa
+- Insert django template code into jinja2 templates
 - Turn any django templatetag or python function into jinja2 filters or
   globals using decorators ... and without creating import loops
 - Extract translation strings from jinja2 templates with django's
   ``makemessages`` management command
-- Access useful jinja2 extensions, such as HTML compression and most django
-  template's native tags
+- Access useful jinja2 extensions, such as HTML compression, most django
+  template's native tags and context processors
 
 
 Usage
@@ -309,3 +308,4 @@ translation in Jinja2 templates appear in the translations dictionary.
 .. _coffin: https://github.com/coffin/coffin/pull/12/files?short_path=88b99bb
 .. _`Armin Ronacher's version`: https://github.com/mitsuhiko/jinja2-htmlcompress/blob/master/jinja2htmlcompress.py
 .. _`Jinja2 built-in decorators`: http://jinja.pocoo.org/docs/api/#utilities
+.. _`the django documentation`: https://docs.djangoproject.com/en/1.8/ref/csrf/#other-template-engines

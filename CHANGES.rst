@@ -10,6 +10,18 @@ Changes
   ``{% django %}`` is used
 - Filters and globals can now be imported from any module
 
+1.1.5 (10-05-2015)
+..................
+
+- Bugfix: fixes context processors import on django 1.8+
+- Enables loaders on django 1.8 (e.g. to ammend the order of the loaders)
+
+1.1.4 (08-05-2015)
+..................
+
+- Bugfix: JINJA2_LOAD_FROM setting was not loaded correctly on django < 1.7
+- Django 1.5 and 1.6 are no longer supported
+
 1.1.3 (16-04-2015)
 ..................
 
