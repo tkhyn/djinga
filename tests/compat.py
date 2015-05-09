@@ -1,9 +1,5 @@
 try:
-    from django.template import engines, engine
-
-    # engine._builtin_context_processors has the csrf context processor enabled
-    # by default, we don't want that for the tests
-    engine._builtin_context_processors = ()
+    from django.template import engines
 
     def get_old_options():
         return engines.templates['djinga']['OPTIONS'].copy()

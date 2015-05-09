@@ -1,6 +1,8 @@
 import jinja2
 
 from django.template.context import BaseContext
+from django.utils.module_loading import import_string
+
 from .engines import engines
 
 
@@ -22,12 +24,10 @@ class DjingaTemplate(jinja2.Template):
     """
 
     def render(self, context=None, request=None):
-        if context == None:
-            context = {}
+        context = ctxt_to_dict(context) if context else {}
 
-        new_ctxt = ctxt_to_dict(context)
-
-        if engines['djinga'].engine.debug:
+        engine = engines['djinga'].engine
+        if engine.debug:
             # send django signal on template rendering if in debug mode
             from django.test import signals
             from django.template.base import Origin
@@ -36,7 +36,11 @@ class DjingaTemplate(jinja2.Template):
                                            template=self,
                                            context=context)
 
-        return super(DjingaTemplate, self).render(new_ctxt)
+        # adds the context processors (without the builtin ones)
+        for cp in engine.context_processors:
+            context.update(import_string(cp)(request))
+
+        return super(DjingaTemplate, self).render(context)
 
     def stream(self, context=None):
         if context == None:
