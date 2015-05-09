@@ -1,7 +1,8 @@
 import jinja2
 
 from django.template.context import BaseContext
-from django.utils.module_loading import import_string
+
+from .compat import import_string
 
 from .engines import engines
 

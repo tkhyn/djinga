@@ -12,6 +12,8 @@ try:
         engines.templates['djinga']['OPTIONS'] = options
         engines['djinga']  # this reinitializes the djinga backend
 
+    context_processors_module = 'django.template.context_processors'
+
 except ImportError:
     # django < 1.8
     from djinga import engines
@@ -25,3 +27,5 @@ except ImportError:
         engines._env = None
         engines._init_env(**options)
         last_options = options.copy()
+
+    context_processors_module = 'django.core.context_processors'

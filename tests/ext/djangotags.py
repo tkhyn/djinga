@@ -3,13 +3,14 @@ from django.template.defaulttags import CsrfTokenNode
 from jinja2 import Markup
 
 from tests.base import ExtTestCase
+from tests.compat import context_processors_module
 
 
 class DjangoTagsTests(ExtTestCase):
 
     options = {
         'context_processors': [
-            'django.template.context_processors.request',
+            '%s.request' % context_processors_module,
         ],
     }
     extensions = ('djinga.ext.django',

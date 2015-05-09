@@ -1,7 +1,9 @@
+import django
 from django import test
 from django.template.loader import get_template
 from django.template import Context
 from django.test.client import RequestFactory
+from django.test.utils import override_settings
 
 from djinga.engines import engines
 
@@ -25,9 +27,18 @@ class TestCase(test.TestCase):
         self.setEnvironment(**(self.options or {}))
 
     def setEnvironment(self, **kwargs):
+        if django.VERSION < (1, 8):
+            cps = kwargs.pop('context_processors', ())
+            self._override_settings = override_settings(
+                TEMPLATE_CONTEXT_PROCESSORS=cps)
+            self._override_settings.enable()
         set_environment(**kwargs)
 
     def _post_teardown(self):
+        try:
+            self._override_settings.disable()
+        except AttributeError:
+            pass
         self.setEnvironment(**self.old_options)
         super(TestCase, self)._post_teardown()
 
@@ -38,7 +49,12 @@ class TestCase(test.TestCase):
             context = Context(context)
         else:
             tmpl = engines['djinga'].from_string(self.template)
-        return tmpl.render(context, request)
+        try:
+            return tmpl.render(context, request)
+        except TypeError:
+            # django < 1.8
+            context['request'] = request
+            return tmpl.render(context)
 
     def assertRender(self, expected, context={}, msg=None):
         actual = self.render(**context)

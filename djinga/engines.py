@@ -51,6 +51,7 @@ except ImportError:
     class DummyEngine(object):
         def __init__(self):
             self.debug = settings.TEMPLATE_DEBUG
+            self.context_processors = settings.TEMPLATE_CONTEXT_PROCESSORS
 
     class DummyBackend(object):
 
@@ -60,6 +61,7 @@ except ImportError:
         @property
         def env(self):
             _init_env()
+            self.engine = DummyEngine()
             return _env
 
         def from_string(self, *args, **kwargs):
