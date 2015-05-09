@@ -1,7 +1,7 @@
-from tests.base import TestCase
+from tests.base import ExtTestCase
 
 
-class HTMLCompressTests(TestCase):
+class HTMLCompressTests(ExtTestCase):
 
     extensions = ('djinga.ext.htmlcompress.HTMLCompress',)
 
@@ -42,7 +42,7 @@ class HTMLCompressTests(TestCase):
         self.assertRender(expected, dict(two='Two', variables='variables'))
 
 
-class SelectiveHTMLCompressTests(TestCase):
+class SelectiveHTMLCompressTests(ExtTestCase):
 
     extensions = ('djinga.ext.htmlcompress.SelectiveHTMLCompress',)
 

@@ -1,7 +1,7 @@
-from tests.base import TestCase
+from tests.base import ExtTestCase
 
 
-class StaticTests(TestCase):
+class StaticTests(ExtTestCase):
 
     extensions = ('djinga.ext.static',
                   'djinga.ext.css',

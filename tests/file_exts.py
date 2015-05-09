@@ -1,9 +1,9 @@
 from django.core.exceptions import ImproperlyConfigured
 
-from .base import TestCase
+from .base import ExtTestCase
 
 
-class DjangoTemplateFileExtTests(TestCase):
+class DjangoTemplateFileExtTests(ExtTestCase):
 
     extensions = ('djinga.ext.static',
                   'djinga.ext.url')
