@@ -13,8 +13,7 @@ class DjangoTagsTests(ExtTestCase):
             '%s.request' % context_processors_module,
         ],
     }
-    extensions = ('djinga.ext.django',
-                  'djinga.ext.csrf_token')
+    extensions = ('djinga.ext.django',)
 
     def test_django_tag(self):
         # using django specific template tags, without spaces nor linebreaks
@@ -29,6 +28,17 @@ class DjangoTagsTests(ExtTestCase):
         # using django specific template tags, without spaces nor linebreaks
         self.template_file = 'djangotag/jinja.jjhtml'
         self.assertRender('\n\nTo be translated\n')
+
+
+class CsrfTest(ExtTestCase):
+
+    extensions = ('djinga.ext.csrf_token',)
+    options = {
+        'context_processors': [
+            '%s.csrf' % context_processors_module,
+        ],
+    }
+    template = '{% csrf_token %}'
 
     def test_csrf_token(self):
         self.template = '{% csrf_token %}'
