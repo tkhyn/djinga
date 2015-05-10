@@ -8,8 +8,7 @@ import jinja2
 from django.template.backends.django import DjangoTemplates
 from django.template.engine import _dirs_undefined
 from django.conf import settings
-
-from ..compat import import_string
+from django.utils.module_loading import import_string
 
 JJENV_OPTION_NAMES = getargspec(jinja2.environment.Environment.__init__)[0][1:]
 

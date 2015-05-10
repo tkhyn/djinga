@@ -2,8 +2,6 @@ import jinja2
 
 from django.template.context import BaseContext
 
-from .compat import import_string
-
 from .engines import engines
 
 
@@ -38,8 +36,8 @@ class DjingaTemplate(jinja2.Template):
                                            context=context)
 
         # adds the context processors (without the builtin ones)
-        for cp in engine.context_processors:
-            context.update(import_string(cp)(request))
+        for cp in engine.template_context_processors:
+            context.update(cp(request))
 
         return super(DjingaTemplate, self).render(context)
 

@@ -48,10 +48,20 @@ try:
 except ImportError:
     # hack for django < 1.8
 
+    from django.template import context
+
     class DummyEngine(object):
         def __init__(self):
             self.debug = settings.TEMPLATE_DEBUG
-            self.context_processors = settings.TEMPLATE_CONTEXT_PROCESSORS
+
+        @property
+        def context_processors(self):
+            return settings.TEMPLATE_CONTEXT_PROCESSORS
+
+        @property
+        def template_context_processors(self):
+            context._standard_context_processors = None
+            return context.get_standard_processors()
 
     class DummyBackend(object):
 
