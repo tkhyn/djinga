@@ -25,6 +25,7 @@ class TestCase(test.TestCase):
         super(TestCase, self)._pre_setup()
         self.old_options = get_old_options()
         self.setEnvironment(**(self.options or {}))
+        self.request = RequestFactory().get('/')
 
     def setEnvironment(self, **kwargs):
         if django.VERSION < (1, 8):
@@ -43,17 +44,16 @@ class TestCase(test.TestCase):
         super(TestCase, self)._post_teardown()
 
     def render(self, **context):
-        request = RequestFactory().get('/')
         if self.template_file:
             tmpl = get_template(self.template_file)
             context = Context(context)
         else:
             tmpl = engines['djinga'].from_string(self.template)
         try:
-            return tmpl.render(context, request)
+            return tmpl.render(context, self.request)
         except TypeError:
             # django < 1.8
-            context['request'] = request
+            context['request'] = self.request
             return tmpl.render(context)
 
     def assertRender(self, expected, context={}, msg=None):

@@ -42,7 +42,7 @@ class CsrfTest(ExtTestCase):
 
     def test_csrf_token(self):
         self.template = '{% csrf_token %}'
-        csrf_token = 'CSRFTOKEN'
+        self.request.META['CSRF_COOKIE'] = csrf_token = 'CSRFTOKEN'
         self.assertRender(
             Markup(CsrfTokenNode().render({'csrf_token': csrf_token})),
             {'csrf_token': csrf_token})
