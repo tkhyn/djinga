@@ -1,7 +1,7 @@
 from django.conf import settings
 
-from .base import TestCase
-from .compat import context_processors_module
+from ._base import TestCase
+from ._compat import context_processors_module
 
 
 class ContextProcessorsTests(TestCase):

@@ -1,4 +1,4 @@
-from .base import TestCase
+from ._base import TestCase
 
 
 class DjangoTemplateTagsTests(TestCase):

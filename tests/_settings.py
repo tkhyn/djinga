@@ -6,7 +6,7 @@ import django
 DEBUG = True
 SECRET_KEY = 'secret'
 
-ROOT_URLCONF = 'tests.urls'
+ROOT_URLCONF = 'tests.app.urls'
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
@@ -20,8 +20,8 @@ DATABASES = {
 }
 
 INSTALLED_APPS = ('djinga',
-                  'tests',
-                  'django_nose')
+                  'django_nose',
+                  'tests.app')
 
 MIDDLEWARE_CLASSES = ()
 

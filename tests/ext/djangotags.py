@@ -2,8 +2,8 @@ from django.template.defaulttags import CsrfTokenNode
 
 from jinja2 import Markup
 
-from tests.base import ExtTestCase
-from tests.compat import context_processors_module
+from tests._base import ExtTestCase
+from tests._compat import context_processors_module
 
 
 class DjangoTagsTests(ExtTestCase):

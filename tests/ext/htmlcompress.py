@@ -1,4 +1,4 @@
-from tests.base import ExtTestCase
+from tests._base import ExtTestCase
 
 
 class HTMLCompressTests(ExtTestCase):

@@ -1,6 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 
-from .base import ExtTestCase
+from ._base import ExtTestCase
 
 
 class DjangoTemplateFileExtTests(ExtTestCase):

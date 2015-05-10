@@ -7,7 +7,7 @@ from django.test.utils import override_settings
 
 from djinga.engines import engines
 
-from .compat import set_environment, get_old_options
+from ._compat import set_environment, get_old_options
 
 
 # nose should not look for tests in this module
