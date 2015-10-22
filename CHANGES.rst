@@ -10,6 +10,13 @@ Changes
   ``{% django %}`` is used
 - Filters and globals can now be imported from any module
 
+1.1.6 (22-10-2015)
+------------------
+
+- Django 1.9 compatibility
+- Drops support for Django 1.4
+- Fixes ``csrf_token`` issue
+
 1.1.5 (10-05-2015)
 ..................
 
