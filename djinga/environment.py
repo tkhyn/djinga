@@ -12,9 +12,9 @@ import jinja2
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.template.base import TemplateDoesNotExist, TemplateSyntaxError
 from django.utils import six
 
+from .compat import TemplateDoesNotExist, TemplateSyntaxError
 from .template import DjingaTemplate
 
 
