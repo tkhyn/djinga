@@ -5,9 +5,13 @@ djinga
 
 Unobtrusive jinja2 integration in Django
 
-Compatible with django 1.4 to 1.8 and relevant python versions (2.6 to 3.4).
-Django 1.5 and 1.6 are not officially supported anymore, but it probably
-still works with these versions.
+Compatible with django 1.7+ (including 1.9) and relevant python versions
+(2.7 to 3.5). Not tested anymore against previous django versions, but might
+still work.
+
+If you like ``djinga`` and are looking for a way to thank me and/or
+encourage future development, you can send a few mBTC at this Bitcoin address:
+``1EwENyR8RV6tMc1hsLTkPURtn5wJgaBfG9``.
 
 
 Why djinga ?
@@ -194,8 +198,7 @@ djinga.ext.htmlcompress.HTMLCompress / SelectiveHTMLCompress
 Django template tags
 --------------------
 
-The following tags are available in any django template explicitly loading
-``djinga_tags`` using the ``{% load djinga_tags %}`` statement.
+The following tags are automatically made available in any django template:
 
 extends
    Overrides the standard ``{% extends %}`` tag and enables it to refer to
@@ -203,7 +206,6 @@ extends
    engine for the current file remains Django's one, the template engine for
    the extended file can be either Jinja2 or Django, depending on the file
    extension (in ``dj_exts`` or ``jj_exts``)
-
 
 
 Adding globals and filters
