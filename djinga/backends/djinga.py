@@ -14,7 +14,6 @@ JJENV_OPTION_NAMES = getargspec(jinja2.environment.Environment.__init__)[0][1:]
 
 
 class DjingaTemplates(DjangoTemplates):
-    app_dirname = 'djinga'
 
     def __init__(self, params):
 
