@@ -2,6 +2,12 @@ Changes
 =======
 
 
+2.0a (dev)
+----------
+
+- Django < 1.8 support dropped
+
+
 1.1 (20-07-2014)
 ----------------
 
@@ -10,8 +16,13 @@ Changes
   ``{% django %}`` is used
 - Filters and globals can now be imported from any module
 
+1.1.7 (22-10-2015)
+..................
+
+- Fixes python 3 issue (use of basestring in register.py), issue #2
+
 1.1.6 (22-10-2015)
-------------------
+..................
 
 - Django 1.9 compatibility
 - Drops support for Django 1.4
