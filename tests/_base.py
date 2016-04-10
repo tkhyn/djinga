@@ -4,10 +4,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
-
-from djinga.engines import engines
-
-from ._compat import set_environment, get_old_options
+from django.template import engines
 
 
 # nose should not look for tests in this module
@@ -23,7 +20,7 @@ class TestCase(test.TestCase):
 
     def _pre_setup(self):
         super(TestCase, self)._pre_setup()
-        self.old_options = get_old_options()
+        self.old_options = engines.templates['djinga']['OPTIONS'].copy()
         self.setEnvironment(**(self.options or {}))
         self.request = RequestFactory().get('/')
 
@@ -33,7 +30,12 @@ class TestCase(test.TestCase):
             self._override_settings = override_settings(
                 TEMPLATE_CONTEXT_PROCESSORS=cps)
             self._override_settings.enable()
-        set_environment(**kwargs)
+        try:
+            del engines._engines['djinga']
+        except KeyError:
+            pass
+        engines.templates['djinga']['OPTIONS'] = kwargs
+        engines.__getitem__('djinga')  # this reinitializes the djinga backend
 
     def _post_teardown(self):
         try:
@@ -49,12 +51,7 @@ class TestCase(test.TestCase):
             context = Context(context)
         else:
             tmpl = engines['djinga'].from_string(self.template)
-        try:
-            return tmpl.render(context, self.request)
-        except TypeError:
-            # django < 1.8
-            context['request'] = self.request
-            return tmpl.render(context)
+        return tmpl.render(context, self.request)
 
     def assertRender(self, expected, context={}, msg=None):
         actual = self.render(**context)

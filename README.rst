@@ -5,9 +5,8 @@ djinga
 
 Unobtrusive jinja2 integration in Django
 
-Compatible with django 1.7+ (including 1.9) and relevant python versions
-(2.7 to 3.5). Not tested anymore against previous django versions, but might
-still work.
+Tested with django 1.8+ and relevant python versions (2.7 to 3.5). If you're
+using an older django version, please use djinga v1.X.
 
 If you like ``djinga`` and are looking for a way to thank me and/or
 encourage future development, you can send a few mBTC at this Bitcoin address:
@@ -39,10 +38,6 @@ Usage
 
 - Install djinga using the method of your choice
 - Add 'djinga' to your INSTALLED_APPS
-
-On django 1.8+
-..............
-
 - Set the ``TEMPLATE`` setting as::
 
    TEMPLATES = [
@@ -59,19 +54,6 @@ On django 1.8+
 - Add the relevant `options`_ for jinja2 and djinga
 
 
-On django < 1.8
-...............
-
-- Change the TEMPLATE_LOADERS settings to::
-
-   TEMPLATE_LOADERS = (
-      'djinga.loaders.FileSystemLoader',
-      'djinga.loaders.AppLoader',
-   )
-
-- Add the relevant `options`_ for jinja2
-
-
 How it works
 ------------
 
@@ -83,9 +65,6 @@ values provided in django's setting module.
 
 Options
 -------
-
-On django 1.8+
-..............
 
 Simply add the following options to the ``'OPTIONS'`` section of the
 ``TEMPLATES`` item matching the djinga backend::
@@ -138,19 +117,6 @@ load_from
 
 any_jinja2_option
    Any other argument to construct a jinja2 environment may be provided.
-
-On django < 1.8
-...............
-
-All the options above are turned into settings using the template::
-
-   JINJA2_<OPTION_NAME_IN_UPPERCASE>
-
-For example, the above ``dj_exts`` option can be specified using the setting
-``JINJA2_DJ_EXTS``
-
-For supplemetary keyword arguments for the jinja2 environment construction, a
-supplementary setting is available: ``JINJA2_ENV_ARGS``.
 
 
 Jinja2 extensions
@@ -310,4 +276,3 @@ translation in Jinja2 templates appear in the translations dictionary.
 .. _coffin: https://github.com/coffin/coffin/pull/12/files?short_path=88b99bb
 .. _`Armin Ronacher's version`: https://github.com/mitsuhiko/jinja2-htmlcompress/blob/master/jinja2htmlcompress.py
 .. _`Jinja2 built-in decorators`: http://jinja.pocoo.org/docs/api/#utilities
-.. _`the django documentation`: https://docs.djangoproject.com/en/1.8/ref/csrf/#other-template-engines

@@ -1,13 +1,12 @@
 from django.conf import settings
 
 from ._base import TestCase
-from ._compat import context_processors_module
 
 
 class ContextProcessorsTests(TestCase):
 
     options = {'context_processors': [
-        '%s.static' % context_processors_module,
+        'django.template.context_processors.static',
     ]}
     template = '{{ STATIC_URL }}'
 

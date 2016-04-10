@@ -1,5 +1,5 @@
 """
-Djinga backend for use in Django >= 1.8
+Djinga backend for use in Django 1.8+
 """
 
 from inspect import getargspec
