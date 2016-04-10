@@ -1,7 +1,7 @@
 djinga
 ======
 
-|copyright| 2014-2015 Thomas Khyn
+|copyright| 2014-2016 Thomas Khyn
 
 Unobtrusive jinja2 integration in Django
 
