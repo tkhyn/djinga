@@ -1,5 +1,7 @@
 from functools import partial
 
+from django.utils import six
+
 
 def _add_attrs(func, jjattr, name=None):
     setattr(func, '_jj_%s' % jjattr, True)
@@ -8,7 +10,7 @@ def _add_attrs(func, jjattr, name=None):
 
 
 def _jj_decorator(jjattr, *args):
-    if isinstance(args[0], basestring):
+    if isinstance(args[0], six.string_types):
         name = args[0]
         return partial(_add_attrs(jjattr=jjattr, name=name))
     else:
