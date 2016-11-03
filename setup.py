@@ -48,8 +48,8 @@ setup(
     ],
     packages=find_packages(exclude=('tests',)),
     install_requires=(
-      'django>=1.8',
-      'jinja2',
+        'django>=1.8',
+        'jinja2',
     ),
     zip_safe=True,
 )

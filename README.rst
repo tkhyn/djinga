@@ -159,7 +159,7 @@ djinga.ext.url
 djinga.ext.htmlcompress.HTMLCompress / SelectiveHTMLCompress
    Based on `Armin Ronacher's version`_.
    Eliminates useless whitespace at template compilation time without extra
-   overhead.
+   overhead. Since version 2.0, it also deals with inline javascript.
 
 Django template tags
 --------------------

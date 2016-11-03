@@ -6,6 +6,7 @@ Changes
 ----------
 
 - Django < 1.8 support dropped
+- HTMLCompressor now compresses inline javascript
 
 
 1.1 (20-07-2014)
