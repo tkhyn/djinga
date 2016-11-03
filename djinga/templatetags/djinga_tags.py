@@ -12,8 +12,8 @@ import re
 
 from django import template
 from django.template.loader_tags import do_extends
+from django.template import engines
 
-from ..engines import engines
 
 register = template.Library()
 

@@ -19,9 +19,11 @@ DATABASES = {
     }
 }
 
-INSTALLED_APPS = ('djinga',
-                  'django_nose',
-                  'tests.app')
+INSTALLED_APPS = (
+    'djinga',
+    'django_nose',
+    'tests.app'
+)
 
 MIDDLEWARE_CLASSES = ()
 

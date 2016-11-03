@@ -1,14 +1,20 @@
 """
-Djinga backend for use in Django >= 1.8
+Djinga backend for use in Django 1.8+
 """
 
 from inspect import getargspec
 import jinja2
 
 from django.template.backends.django import DjangoTemplates
-from django.template.engine import _dirs_undefined
 from django.conf import settings
 from django.utils.module_loading import import_string
+
+try:
+    from django.template.engine import _dirs_undefined
+except ImportError:
+    # Django >= 1.10
+    _dirs_undefined = None
+
 
 JJENV_OPTION_NAMES = getargspec(jinja2.environment.Environment.__init__)[0][1:]
 
@@ -32,8 +38,9 @@ class DjingaTemplates(DjangoTemplates):
 
         super(DjingaTemplates, self).__init__(params.copy())
 
-        jjenv_options.setdefault('loader',
-                           jinja2.FileSystemLoader(self.template_dirs))
+        jjenv_options.setdefault(
+            'loader', jinja2.FileSystemLoader(self.template_dirs)
+        )
 
         jjenv_options.setdefault('auto_reload', settings.DEBUG)
         jjenv_options.setdefault('undefined',
@@ -45,7 +52,16 @@ class DjingaTemplates(DjangoTemplates):
     def from_string(self, template_code):
         return self.env.from_string(template_code)
 
-    def get_template(self, template_name, dirs=_dirs_undefined):
+    def _get_template(self, template_name, **kwargs):
         if self.env.use_jinja(template_name):
             return self.env.get_template(template_name)
-        return super(DjingaTemplates, self).get_template(template_name, dirs)
+        return super(DjingaTemplates, self).get_template(template_name,
+                                                         **kwargs)
+
+    if _dirs_undefined is None:
+        # django 1.10+
+        def get_template(self, template_name):
+            return self._get_template(template_name)
+    else:
+        def get_template(self, template_name, dirs=_dirs_undefined):
+            return self._get_template(template_name, dirs=dirs)

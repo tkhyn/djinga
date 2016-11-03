@@ -34,8 +34,7 @@ import re
 from django.core.management.commands import makemessages
 from django.utils.translation import trans_real
 from django.template.base import BLOCK_TAG_START, BLOCK_TAG_END
-
-from djinga.engines import engines
+from django.template import engines
 
 
 strip_whitespace_right = re.compile(
@@ -81,16 +80,8 @@ class Command(makemessages.Command):
         trans_real.templatize = my_templatize
 
         try:
-            try:
-                # django < 1.8
-                super(Command, self).handle_noargs(**options)
-            except AttributeError:
-                super(Command, self).handle(**options)
+            super(Command, self).handle(**options)
         finally:
             trans_real.endblock_re = old_endblock_re
             trans_real.block_re = old_block_re
             trans_real.templatize = old_templatize
-
-    def handle_noargs(self, **options):
-        # for django < 1.8
-        return self.handle(**options)

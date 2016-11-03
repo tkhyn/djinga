@@ -11,7 +11,7 @@ class HTMLCompressTests(ExtTestCase):
               <head>
                 <title>{{ title }}</title>
               </head>
-              <script type=text/javascript>
+              <script type="text/javascript">
                 if (foo < 42) {
                   document.write('Foo < Bar');
                 }
@@ -24,11 +24,15 @@ class HTMLCompressTests(ExtTestCase):
         '''
 
         expected = \
-            '''<html><head><title>42</title></head><script type=text/javascript>
-                if (foo < 42) {
-                  document.write('Foo < Bar');
-                }
-              </script><body><li><a href="index.html">42</a><br>Test  Foo<li><a href="index.html">42</a><img src=test.png></body></html>'''
+            '<html><head><title>42</title></head>' \
+                '<script type="text/javascript">' \
+                    'if (foo < 42) { document.write(\'Foo < Bar\'); }' \
+                '</script>' \
+                '<body>' \
+                    '<li><a href="index.html">42</a><br>Test  Foo' \
+                    '<li><a href="index.html">42</a><img src=test.png>' \
+                '</body>' \
+            '</html>'
         self.assertRender(expected, dict(title=42, href='index.html'))
 
     def test_leave_spaces_between_vars(self):

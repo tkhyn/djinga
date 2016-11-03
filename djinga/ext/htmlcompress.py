@@ -21,6 +21,7 @@
 # Aug. 2014: Python 3.3 compatibility, by Thomas Khyn
 
 import re
+
 from django.utils.six import next
 from django.utils.six.moves import xrange
 
@@ -103,16 +104,22 @@ class HTMLCompress(Extension):
 
     def normalize(self, ctx):
         pos = 0
-        buffer = []
+        buf = []
+
         def write_data(value):
-            if not self.is_isolated(ctx.stack):
+            try:
+                js = ctx.stack[-1] == 'script'
+            except IndexError:
+                js = False
+
+            if js or not self.is_isolated(ctx.stack):
                 l = _ws_normalize_re.split(value)
                 if not l[0]:
                     l.pop(0)
                 if l and not l[-1]:
                     l.pop()
                 value = ' '.join(l)
-            buffer.append(value)
+            buf.append(value)
 
         for match in _tag_re.finditer(ctx.token.value):
             closes, tag, sole = match.groups()
@@ -121,12 +128,12 @@ class HTMLCompress(Extension):
             if sole:
                 write_data(sole)
             else:
-                buffer.append(match.group())
+                buf.append(match.group())
                 (closes and self.leave_tag or self.enter_tag)(tag, ctx)
             pos = match.end()
 
         write_data(ctx.token.value[pos:])
-        return u''.join(buffer)
+        return u''.join(buf)
 
     def filter_stream(self, stream):
         ctx = StreamProcessContext(stream)
