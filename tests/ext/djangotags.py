@@ -1,3 +1,5 @@
+import mock
+
 from django.template.defaulttags import CsrfTokenNode
 
 from jinja2 import Markup
@@ -39,9 +41,10 @@ class CsrfTest(ExtTestCase):
     }
     template = '{% csrf_token %}'
 
-    def test_csrf_token(self):
+    @mock.patch('django.template.context_processors.get_token')
+    def test_csrf_token(self, get_token):
         self.template = '{% csrf_token %}'
-        self.request.META['CSRF_COOKIE'] = csrf_token = 'CSRFTOKEN'
+        get_token.return_value = csrf_token = 'CSRFTOKEN'
         self.assertRender(
             Markup(CsrfTokenNode().render({'csrf_token': csrf_token})),
             {'csrf_token': csrf_token})

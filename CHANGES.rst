@@ -5,6 +5,7 @@ Changes
 2.0a (dev)
 ----------
 
+- Django 1.10 support added
 - Django < 1.8 support dropped
 - HTMLCompressor now compresses inline javascript
 
