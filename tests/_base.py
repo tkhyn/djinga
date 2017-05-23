@@ -48,7 +48,8 @@ class TestCase(test.TestCase):
     def render(self, **context):
         if self.template_file:
             tmpl = get_template(self.template_file)
-            context = Context(context)
+            if django.VERSION < (1, 11):
+                context = Context(context)
         else:
             tmpl = engines['djinga'].from_string(self.template)
         return tmpl.render(context, self.request)
