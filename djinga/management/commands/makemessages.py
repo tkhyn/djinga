@@ -32,9 +32,13 @@ getting-translation-strings-for-jinja2-templates-integrated-with-django-1-x
 
 import re
 from django.core.management.commands import makemessages
-from django.utils.translation import trans_real
 from django.template.base import BLOCK_TAG_START, BLOCK_TAG_END
 from django.template import engines
+
+try:
+    from django.utils.translation import template
+except ImportError:
+    from django.utils.translation import trans_real as template
 
 
 strip_whitespace_right = re.compile(
@@ -58,30 +62,35 @@ class Command(makemessages.Command):
         if not options['extensions']:
             options['extensions'] = list(engines['djinga'].env.template_exts)
 
-        old_endblock_re = trans_real.endblock_re
-        old_block_re = trans_real.block_re
-        old_templatize = trans_real.templatize
+        old_endblock_re = template.endblock_re
+        old_block_re = template.block_re
+        old_templatize = template.templatize
         # Extend the regular expressions that are used to detect
         # translation blocks with an "OR jinja-syntax" clause.
-        trans_real.endblock_re = re.compile(
-            trans_real.endblock_re.pattern + '|' + \
+        template.endblock_re = re.compile(
+            template.endblock_re.pattern + '|' + \
             r"""^-?\s*endtrans\s*-?$""")
-        trans_real.block_re = re.compile(
-            trans_real.block_re.pattern + '|' + \
+        template.block_re = re.compile(
+            template.block_re.pattern + '|' + \
             r"""^-?\s*trans(?:\s+(?!'|")(?=.*?=.*?)|-?$)""")
-        trans_real.plural_re = re.compile(
-            trans_real.plural_re.pattern + '|' + \
+        template.plural_re = re.compile(
+            template.plural_re.pattern + '|' + \
             r"""^-?\s*pluralize(?:\s+.+|-?$)""")
 
-        def my_templatize(src, origin=None):
+        def my_templatize(src, origin=None, charset='utf-8'):
             new_src = strip_whitespaces(src)
-            return old_templatize(new_src, origin)
+            try:
+                # django 1.11
+                return old_templatize(new_src, origin, charset)
+            except TypeError:
+                # django < 1.11
+                return old_templatize(new_src, origin)
 
-        trans_real.templatize = my_templatize
+        template.templatize = my_templatize
 
         try:
             super(Command, self).handle(**options)
         finally:
-            trans_real.endblock_re = old_endblock_re
-            trans_real.block_re = old_block_re
-            trans_real.templatize = old_templatize
+            template.endblock_re = old_endblock_re
+            template.block_re = old_block_re
+            template.templatize = old_templatize
