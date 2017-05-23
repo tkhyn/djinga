@@ -77,9 +77,14 @@ class Command(makemessages.Command):
             template.plural_re.pattern + '|' + \
             r"""^-?\s*pluralize(?:\s+.+|-?$)""")
 
-        def my_templatize(src, origin=None):
+        def my_templatize(src, origin=None, charset='utf-8'):
             new_src = strip_whitespaces(src)
-            return old_templatize(new_src, origin)
+            try:
+                # django 1.11
+                return old_templatize(new_src, origin, charset)
+            except TypeError:
+                # django < 1.11
+                return old_templatize(new_src, origin)
 
         template.templatize = my_templatize
 
