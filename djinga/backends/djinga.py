@@ -23,7 +23,8 @@ class DjingaTemplates(DjangoTemplates):
 
     def __init__(self, params):
 
-        options = params['OPTIONS']
+        params = params.copy()
+        options = params['OPTIONS'].copy()
 
         env = options.pop('environment', 'djinga.Environment')
         env_cls = import_string(env)
@@ -36,7 +37,10 @@ class DjingaTemplates(DjangoTemplates):
             if k in jjenv_options_names:
                 jjenv_options[k] = options.pop(k)
 
-        super(DjingaTemplates, self).__init__(params.copy())
+        # we only modify the params copy
+        params['OPTIONS'] = options
+
+        super(DjingaTemplates, self).__init__(params)
 
         jjenv_options.setdefault(
             'loader', jinja2.FileSystemLoader(self.template_dirs)
