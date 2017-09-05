@@ -1,7 +1,7 @@
 """
 djinga
 Unobtrusive jinja2 integration in Django
-(c) 2014-2016 Thomas Khyn
+(c) 2014-2017 Thomas Khyn
 MIT license (see LICENSE.txt) unless otherwise stated in file header
 """
 

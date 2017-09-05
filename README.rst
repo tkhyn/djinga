@@ -1,12 +1,12 @@
 djinga
 ======
 
-|copyright| 2014-2016 Thomas Khyn
+|copyright| 2014-2017 Thomas Khyn
 
 Unobtrusive jinja2 integration in Django
 
-Tested with django 1.8+ and relevant python versions (2.7 to 3.5). If you're
-using an older django version, please use djinga v1.X.
+Tested with django 1.8 and 1.11 and relevant python versions (2.7 to 3.6). If
+you are using an older django version, please use djinga v1.X.
 
 If you like ``djinga`` and are looking for a way to thank me and/or
 encourage future development, you can send a few mBTC at this Bitcoin address:
