@@ -1,4 +1,8 @@
-import mock
+try:
+    from unittest import mock
+except:
+    # Python 2
+    import mock
 
 from django.template.defaulttags import CsrfTokenNode
 
