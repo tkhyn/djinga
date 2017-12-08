@@ -8,8 +8,8 @@ Unobtrusive jinja2 integration in Django
 Tested with django 1.8+ and relevant python versions (2.7 to 3.5). If you're
 using an older django version, please use djinga v1.X.
 
-If you like ``djinga`` and are looking for a way to thank me and/or
-encourage future development, you can send a few mBTC at this Bitcoin address:
+If you like ``djinga`` and are looking for a way to thank me and/or encourage
+future development, here is my BTC or BCH donation address:
 ``1EwENyR8RV6tMc1hsLTkPURtn5wJgaBfG9``.
 
 
