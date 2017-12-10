@@ -14,6 +14,12 @@ Changes
 - Fix parameters modifications bug
 
 
+2.1.2 (10-12-2017)
+..................
+
+- Django 2.0 support
+
+
 2.0 (03-11-2016)
 ----------------
 
