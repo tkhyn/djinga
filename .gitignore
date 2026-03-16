@@ -12,6 +12,7 @@ djinga.egg-info
 # test related files and folders
 .tox
 .coverage
+tests/.cache
 
 # python binary files
 *.pyc

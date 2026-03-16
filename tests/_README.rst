@@ -11,11 +11,9 @@ especially if you're not familiar with zc.buildout and/or tox.
 The tests
 ---------
 
-djinga uses nose_ and django_nose_ for testing. All the tests are in the
-``tests`` directory, and the nose test runner uses the ``all-modules`` option
-which is defined in ``tests/setup.cfg``. This means that any object which is
-not intended to contain tests (e.g. a base classes module) shall contain the
-statement ``__test__ = False``.
+djinga uses pytest_ for testing. All the tests are in the ``tests`` directory.
+The files not starting with ``test_`` are not intended to contain tests but only
+helper functions, classes or data.
 
 The ``setup.cfg`` file also contains coverage pre-configuration information,
 but coverage is disabled by default.
@@ -84,7 +82,7 @@ tests from within an IDE, for example). To do this:
 
 And simply use::
 
-   $ nosetests [options]
+   $ pytest [options]
 
 
 Running the tox suite
@@ -106,7 +104,6 @@ the main directory::
    $ tox
 
 
-.. _nose: http://nose.readthedocs.org/en/latest/
-.. _django_nose: https://pypi.python.org/pypi/django-nose
+.. _pytest: https://docs.pytest.org/en/stable/
 .. _zc.buildout: http://www.buildout.org/en/latest/
 .. _tox: https://testrun.org/tox/

@@ -21,7 +21,6 @@ DATABASES = {
 
 INSTALLED_APPS = (
     'djinga',
-    'django_nose',
     'tests.app'
 )
 
@@ -42,5 +41,3 @@ else:
         'djinga.loaders.AppLoader',
     )
     TEMPLATE_DIRS = _template_dirs
-
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
