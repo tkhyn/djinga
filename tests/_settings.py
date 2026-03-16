@@ -1,7 +1,5 @@
 import os
 
-import django
-
 
 DEBUG = True
 SECRET_KEY = 'secret'
@@ -24,20 +22,9 @@ INSTALLED_APPS = (
     'tests.app'
 )
 
-MIDDLEWARE_CLASSES = ()
-
-_template_dirs = (os.path.join(os.path.dirname('__file__'), 'templates'),)
-
-if django.VERSION >= (1, 8):
-    TEMPLATES = [
-        dict(
-            BACKEND='djinga.backends.djinga.DjingaTemplates',
-            DIRS=_template_dirs,
-        ),
-    ]
-else:
-    TEMPLATE_LOADERS = (
-        'djinga.loaders.FileSystemLoader',
-        'djinga.loaders.AppLoader',
-    )
-    TEMPLATE_DIRS = _template_dirs
+TEMPLATES = [
+    dict(
+        BACKEND='djinga.backends.djinga.DjingaTemplates',
+        DIRS=(os.path.join(os.path.dirname('__file__'), 'templates'),),
+    ),
+]

@@ -2,7 +2,7 @@
 Djinga backend for use in Django 1.8+
 """
 
-from inspect import getargspec
+from inspect import getfullargspec
 import jinja2
 
 from django.template.backends.django import DjangoTemplates
@@ -16,7 +16,7 @@ except ImportError:
     _dirs_undefined = None
 
 
-JJENV_OPTION_NAMES = getargspec(jinja2.environment.Environment.__init__)[0][1:]
+JJENV_OPTION_NAMES = getfullargspec(jinja2.environment.Environment.__init__)[0][1:]
 
 
 class DjingaTemplates(DjangoTemplates):
@@ -30,7 +30,7 @@ class DjingaTemplates(DjangoTemplates):
         env_cls = import_string(env)
 
         jjenv_options_names = JJENV_OPTION_NAMES + \
-                              getargspec(env_cls.__init__)[0][1:]
+                              getfullargspec(env_cls.__init__)[0][1:]
 
         jjenv_options = {}
         for k in list(options.keys()):

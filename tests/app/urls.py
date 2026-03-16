@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import urls
 from django.views.defaults import page_not_found
 
 try:
@@ -8,7 +8,7 @@ except ImportError:
 
 
 urlpatterns = [
-    url('^not_found/$', page_not_found, name='notfound')
+    urls('^not_found/$', page_not_found, name='notfound')
 ]
 
 

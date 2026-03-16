@@ -25,11 +25,6 @@ class TestCase(test.TestCase):
         self.request = RequestFactory().get('/')
 
     def setEnvironment(self, **kwargs):
-        if django.VERSION < (1, 8):
-            cps = kwargs.pop('context_processors', ())
-            self._override_settings = override_settings(
-                TEMPLATE_CONTEXT_PROCESSORS=cps)
-            self._override_settings.enable()
         try:
             del engines._engines['djinga']
         except KeyError:
@@ -48,8 +43,6 @@ class TestCase(test.TestCase):
     def render(self, **context):
         if self.template_file:
             tmpl = get_template(self.template_file)
-            if django.VERSION < (1, 11):
-                context = Context(context)
         else:
             tmpl = engines['djinga'].from_string(self.template)
         return tmpl.render(context, self.request)

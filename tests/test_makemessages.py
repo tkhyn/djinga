@@ -21,11 +21,9 @@ class MakemessagesTests(TestCase):
 
     def test_make_messages(self):
         loc = 'fr'
-        if django.VERSION >= (1, 6):
-            loc = [loc]
-        call_command('makemessages', locale=loc)
+        call_command('makemessages', locale=[loc])
 
-        po_file = open(os.path.join(self.locale_dir, 'fr',
+        po_file = open(os.path.join(self.locale_dir, loc,
                                     'LC_MESSAGES', 'django.po'), 'r')
         po_ctnt = po_file.read()
         po_file.close()

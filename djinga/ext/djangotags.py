@@ -5,9 +5,9 @@ Extensions to use Django template language within Jinja2 templates
 from django import template as dj_template
 from django.core.exceptions import ImproperlyConfigured
 
-from jinja2 import nodes, contextfunction
+from jinja2 import nodes, pass_context
 from jinja2.ext import Extension
-from jinja2 import Markup
+from markupsafe import Markup
 
 
 class DjangoTag(Extension):
@@ -32,7 +32,7 @@ class DjangoTag(Extension):
             self.call_method('_django', args=[body], kwargs=[]),
         ]).set_lineno(lineno=lineno)
 
-    @contextfunction
+    @pass_context
     def _django(self, context, html):
         request = context.get('request', None)
         if not request:
