@@ -2,8 +2,6 @@
 Base classes for extensions
 """
 
-from django.utils import six
-
 from jinja2 import nodes
 from jinja2.ext import Extension
 
@@ -15,7 +13,7 @@ class SimpleTag(Extension):
     abstract = True
 
     def parse(self, parser):
-        six.next(parser.stream)
+        next(parser.stream)
         args = []
         while parser.stream.current.type != 'block_end':
             args.append(parser.parse_expression())
