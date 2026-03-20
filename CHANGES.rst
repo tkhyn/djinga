@@ -2,6 +2,14 @@ Changes
 =======
 
 
+3.0 (21-03-2026)
+----------------
+
+- Breaking change: remove python 2 compatibility
+- Breaking change: drops support for Django < 5.2
+- Use py.test instead of nose for the tests
+
+
 2.1 (23-05-2017)
 ----------------
 

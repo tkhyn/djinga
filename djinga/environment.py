@@ -12,7 +12,6 @@ import jinja2
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import six
 
 from .compat import TemplateDoesNotExist, TemplateSyntaxError
 from .template import DjingaTemplate
@@ -78,8 +77,6 @@ class Environment(jinja2.Environment):
         try:
             return super(Environment, self).get_template(*args, **kwargs)
         except jinja2.TemplateNotFound as exc:
-            six.reraise(TemplateDoesNotExist,
-                        TemplateDoesNotExist(exc.args), sys.exc_info()[2])
+            raise TemplateDoesNotExist(exc.args) from exc
         except jinja2.TemplateSyntaxError as exc:
-            six.reraise(TemplateSyntaxError,
-                        TemplateSyntaxError(exc.args), sys.exc_info()[2])
+            raise TemplateSyntaxError(exc.args) from exc

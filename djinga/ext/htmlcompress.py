@@ -22,15 +22,12 @@
 
 import re
 
-from django.utils.six import next
-from django.utils.six.moves import xrange
-
 from jinja2.ext import Extension
 from jinja2.lexer import Token, describe_token
 from jinja2 import TemplateSyntaxError
 
 
-_tag_re = re.compile(r'(?:<(/?)([a-zA-Z0-9_-]+)\s*|(>\s*))(?s)')
+_tag_re = re.compile(r'(?s)(?:<(/?)([a-zA-Z0-9_-]+)\s*|(>\s*))')
 _ws_normalize_re = re.compile(r'\s*[\r\n]\s*')
 
 
@@ -97,7 +94,7 @@ class HTMLCompress(Extension):
             return
         for idx, other_tag in enumerate(reversed(ctx.stack)):
             if other_tag == tag:
-                for num in xrange(idx + 1):
+                for num in range(idx + 1):
                     ctx.stack.pop()
             elif not self.breaking_rules.get(other_tag):
                 break
